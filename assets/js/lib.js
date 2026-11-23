@@ -2,6 +2,7 @@
 // image handling, lightbox, scroll reveal.
 import { createClient } from '../vendor/supabase-js-2.119.2.js';
 import { SUPABASE_URL, SUPABASE_KEY, BUCKET } from './config.js';
+import { startPetals } from './petals.js';
 
 export const sb = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, storageKey: 'memorial-site-auth' }
@@ -149,6 +150,7 @@ export async function layout(active) {
       <p class="note">${esc(s.footer_note || 'Built with love by his family')} · <a class="admin-link" href="admin.html">Family login</a></p>
     </div></footer>`;
   }
+  if (s.petals !== false) startPetals(s.petals_amount || 'medium');
   return s;
 }
 
