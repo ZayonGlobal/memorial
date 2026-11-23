@@ -60,10 +60,14 @@ export function startPetals(amount = 'medium') {
     g.addColorStop(1, `rgba(240,236,232,${p.a})`);
     ctx.fillStyle = g;
     // a faint shadow keeps white petals visible over white sections
-    ctx.shadowColor = 'rgba(0,0,0,0.16)';
-    ctx.shadowBlur = 5;
-    ctx.shadowOffsetY = 1.5;
+    ctx.shadowColor = 'rgba(0,0,0,0.22)';
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetY = 2;
     ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.lineWidth = 0.6;
+    ctx.strokeStyle = 'rgba(0,0,0,0.10)';
+    ctx.stroke();
     ctx.restore();
   }
 

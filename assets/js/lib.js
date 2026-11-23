@@ -57,6 +57,7 @@ export const icon = {
   plus: (w = 16) => S('<path d="M12 5v14M5 12h14"/>', w, 1.8),
   pause: (w = 14) => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>`,
   playSmall: (w = 14) => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>`,
+  arrowUpRight: (w = 15) => S('<path d="M7 17L17 7"/><path d="M8 7h9v9"/>', w, 1.8),
   down: (w = 20) => S('<path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>', w, 1.8)
 };
 export const valueIcon = (name) => (icon[name] || icon.star)(34);
