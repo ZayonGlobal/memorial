@@ -390,6 +390,10 @@ async function viewHome(c) {
       ${F({ key: 'service_programme_url', label: 'Order of service link (e.g. a Google Drive PDF)', type: 'url' })}
       ${F({ key: 'service_livestream_url', label: 'Livestream link (YouTube / Facebook)', type: 'url' })}
     </div></section>
+    <section class="box"><div class="box-head"><h2>Falling petals</h2></div><div class="box-body ed">
+      ${fieldHtml({ key: 'petals', label: 'White petals drifting down over the site', type: 'switch', help: 'Turned off automatically for visitors whose phones are set to reduce motion.' }, s.petals !== false)}
+      ${fieldHtml({ key: 'petals_amount', label: 'How many petals', type: 'select', options: [['light', 'Light'], ['medium', 'Medium'], ['heavy', 'Heavy']] }, s.petals_amount || 'medium')}
+    </div></section>
     <section class="box"><div class="box-head"><h2>Children's videos page &amp; footer</h2></div><div class="box-body ed">
       ${F({ key: 'children_intro', label: 'Introduction on the videos page', type: 'textarea', rows: 2 })}
       ${F({ key: 'children_total', label: 'Total length of all videos', placeholder: '18 minutes' })}

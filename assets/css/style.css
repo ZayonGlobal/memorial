@@ -469,3 +469,5 @@ button{cursor:pointer}
 .hx-title{max-width:13ch;font-size:clamp(46px,7.6vw,124px)}
 .hx-eyebrow{margin-bottom:18px;line-height:1.7}
 @media (max-width:760px){.hx-stack{min-height:0}.hx-line{top:auto;bottom:auto}.hx-title{max-width:none}}
+/* falling petals layer: above content, below the header, menus and lightbox */
+canvas.petals{position:fixed;inset:0;z-index:40;pointer-events:none}
