@@ -67,8 +67,10 @@ create table if not exists public.memorial_seasons (
   period text not null default '',
   eyebrow text not null default '',
   writeup text not null default '',
-  cover_url text
+  cover_url text,
+  hero_line text
 );
+alter table public.memorial_seasons add column if not exists hero_line text;
 
 create table if not exists public.memorial_season_photos (
   id uuid primary key default gen_random_uuid(),
@@ -246,6 +248,9 @@ on conflict do nothing;
 insert into public.memorial_settings (id, data)
 select 1, jsonb_build_object(
   'name', '[His Full Name]',
+  'hero_headline', 'A Life Well Lived',
+  'hero_accent', 'Forever loved',
+  'slide_seconds', 6,
   'birth_year', '[Year of Birth]',
   'death_year', '[Year of Passing]',
   'tagline_before', 'A life lived with',
@@ -306,17 +311,17 @@ select * from (values
 ) v(sort, year, label)
 where not exists (select 1 from public.memorial_timeline);
 
-insert into public.memorial_seasons (sort, numeral, title, period, eyebrow, writeup)
+insert into public.memorial_seasons (sort, numeral, title, period, eyebrow, writeup, hero_line)
 select * from (values
-  (1, 'I',    'Childhood & Roots',         '[Years]', 'Where it all began',   '[A few words on his childhood: the home he grew up in, his parents and siblings, and a story the family still tells from those years.]'),
-  (2, 'II',   'School & Youth',            '[Years]', 'Finding his way',      '[His school days, the friends he made, what he was good at, and the young man he was becoming.]'),
-  (3, 'III',  'Young Man & Early Career',  '[Years]', 'Making his mark',      '[His first job, where he lived, what he dreamed of, and the choices that set the course of his life.]'),
-  (4, 'IV',   'Marriage',                  '[Years]', 'Building a home',      '[How he met our mother, their wedding day, and the early years of their life together.]'),
-  (5, 'V',    'Fatherhood',                '[Years]', 'Raising us',           '[The kind of father he was when we were small, and the lessons he repeated until we learned them.]'),
-  (6, 'VI',   'Career & Community Years',  '[Years]', 'Serving others',       '[His work at its peak, the roles he held in the community, and the people who looked up to him.]'),
-  (7, 'VII',  'Grandfather & Later Years', '[Years]', 'A full table',         '[Retirement, his grandchildren, the routines he loved, and the wisdom he shared in his later years.]'),
-  (8, 'VIII', 'The Final Chapter',         '[Years]', 'Remembered always',    '[A gentle account of his last season: the people around him and the words he left with us.]')
-) v(sort, numeral, title, period, eyebrow, writeup)
+  (1, 'I',    'Childhood & Roots',         '[Years]', 'Where it all began',   '[A few words on his childhood: the home he grew up in, his parents and siblings, and a story the family still tells from those years.]', 'The Boy from [Hometown]'),
+  (2, 'II',   'School & Youth',            '[Years]', 'Finding his way',      '[His school days, the friends he made, what he was good at, and the young man he was becoming.]', null),
+  (3, 'III',  'Young Man & Early Career',  '[Years]', 'Making his mark',      '[His first job, where he lived, what he dreamed of, and the choices that set the course of his life.]', null),
+  (4, 'IV',   'Marriage',                  '[Years]', 'Building a home',      '[How he met our mother, their wedding day, and the early years of their life together.]', 'A Love That Built a Home'),
+  (5, 'V',    'Fatherhood',                '[Years]', 'Raising us',           '[The kind of father he was when we were small, and the lessons he repeated until we learned them.]', 'A Father to Us All'),
+  (6, 'VI',   'Career & Community Years',  '[Years]', 'Serving others',       '[His work at its peak, the roles he held in the community, and the people who looked up to him.]', null),
+  (7, 'VII',  'Grandfather & Later Years', '[Years]', 'A full table',         '[Retirement, his grandchildren, the routines he loved, and the wisdom he shared in his later years.]', 'Wisdom in His Years'),
+  (8, 'VIII', 'The Final Chapter',         '[Years]', 'Remembered always',    '[A gentle account of his last season: the people around him and the words he left with us.]', null)
+) v(sort, numeral, title, period, eyebrow, writeup, hero_line)
 where not exists (select 1 from public.memorial_seasons);
 
 insert into public.memorial_children (sort, name, relation, duration)

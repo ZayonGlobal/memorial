@@ -39,9 +39,9 @@ const S = (d, w = 24, sw = 1.4, extra = '') =>
 export const icon = {
   flame: (w = 22, cls = '') => S('<path d="M12 2.5c2.5 3.2 5 5.6 5 9.2a5 5 0 0 1-10 0c0-3.6 2.5-6 5-9.2z"/><path d="M12 10c1 1.3 2 2.3 2 3.6a2 2 0 0 1-4 0c0-1.3 1-2.3 2-3.6z"/>', w, 1.4, cls ? `class="${cls}"` : ''),
   flameOutline: (w = 16, cls = '') => S('<path d="M12 2.5c2.5 3.2 5 5.6 5 9.2a5 5 0 0 1-10 0c0-3.6 2.5-6 5-9.2z"/>', w, 1.6, cls ? `class="${cls}"` : ''),
-  flameSolid: (w = 44, h = 58, cls = 'flame') => `<svg aria-hidden="true" class="${cls}" width="${w}" height="${h}" viewBox="0 0 24 32"><path d="M12 1c3.4 4.4 7 7.8 7 12.8a7 7 0 0 1-14 0C5 8.8 8.6 5.4 12 1z" fill="#E8B96A"/><path d="M12 9c1.6 2 3.2 3.6 3.2 5.8a3.2 3.2 0 0 1-6.4 0c0-2.2 1.6-3.8 3.2-5.8z" fill="#FFF3D6"/></svg>`,
+  flameSolid: (w = 44, h = 58, cls = 'flame') => `<svg aria-hidden="true" class="${cls}" width="${w}" height="${h}" viewBox="0 0 24 32"><path d="M12 1c3.4 4.4 7 7.8 7 12.8a7 7 0 0 1-14 0C5 8.8 8.6 5.4 12 1z" fill="#F08A3C"/><path d="M12 9c1.6 2 3.2 3.6 3.2 5.8a3.2 3.2 0 0 1-6.4 0c0-2.2 1.6-3.8 3.2-5.8z" fill="#FFE3CC"/></svg>`,
   camera: (w = 26) => S('<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8.5 6l1.5-2.5h4L15.5 6"/>', w, 1.3),
-  play: (w = 30, fill = '#C3A57A') => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="${fill}"><path d="M8 5.5v13l10.5-6.5z"/></svg>`,
+  play: (w = 30, fill = '#D9732B') => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="${fill}"><path d="M8 5.5v13l10.5-6.5z"/></svg>`,
   family: (w = 34) => S('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14c2.2.6 3.5 2.8 3.5 6"/>', w, 1.2),
   integrity: (w = 34) => S('<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>', w, 1.2),
   heart: (w = 34) => S('<path d="M12 20s-7.5-4.5-7.5-10A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7.5 3c0 5.5-7.5 10-7.5 10z"/>', w, 1.2),
@@ -53,14 +53,17 @@ export const icon = {
   upload: (w = 22) => S('<path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>', w, 1.5),
   pin: (w = 12) => S('<path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/>', w, 2),
   menu: (w = 20) => S('<path d="M4 7h16M4 12h16M4 17h16"/>', w, 1.6),
-  plus: (w = 16) => S('<path d="M12 5v14M5 12h14"/>', w, 1.8)
+  plus: (w = 16) => S('<path d="M12 5v14M5 12h14"/>', w, 1.8),
+  pause: (w = 14) => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>`,
+  playSmall: (w = 14) => `<svg aria-hidden="true" width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>`,
+  down: (w = 20) => S('<path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>', w, 1.8)
 };
 export const valueIcon = (name) => (icon[name] || icon.star)(34);
 
 export function placeholder(label = 'Photo', light = false, cls = '') {
   return `<div class="ph ${light ? 'light' : ''} ${cls}">${icon.camera()}<span>${esc(label)}</span></div>`;
 }
-export function ornament(color = '#C3A57A') {
+export function ornament(color = '#D9732B') {
   return `<div class="ornament" aria-hidden="true"><span style="background:${color}"></span><span style="width:auto;height:auto;background:none;color:${color}">${icon.flameOutline(18)}</span><span style="background:${color}"></span></div>`;
 }
 export function bokeh(list) {
@@ -102,7 +105,7 @@ export async function layout(active) {
   const head = $('#site-header');
   if (head) {
     let bar = '';
-    if (active === 'home' && s.show_service) {
+    if (false && active === 'home' && s.show_service) { // on the home page the service details sit in the slideshow band
       const link = safeUrl(s.service_livestream_url) || safeUrl(s.service_programme_url) || safeUrl(s.service_map_url);
       bar = `<div class="service-bar"><div class="wrap">
         <span class="t">${esc(s.service_title || 'Funeral Service')}</span>
@@ -114,7 +117,7 @@ export async function layout(active) {
         ${!link ? '' : ''}
       </div></div>`;
     }
-    head.outerHTML = `${bar}<header class="site-header"><div class="wrap">
+    head.outerHTML = `${bar}<header class="site-header ${active === 'home' ? 'over' : ''}"><div class="wrap">
       <a class="brand" href="index.html">${icon.flame(22)}<span>In Loving Memory</span></a>
       <nav aria-label="Main"><div class="nav-links" id="nav-links">
         ${NAV.map(([href, label, key]) => `<a href="${href}" ${key === active ? 'aria-current="page"' : ''}>${label}</a>`).join('')}
@@ -124,8 +127,12 @@ export async function layout(active) {
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">${icon.menu()}</button>
     </div></header>`;
     const t = $('.nav-toggle');
+    const hdr = $('.site-header');
+    const solid = () => hdr.classList.toggle('solid', window.scrollY > 40 || $('#nav-links').classList.contains('open'));
+    if (hdr.classList.contains('over')) { addEventListener('scroll', solid, { passive: true }); solid(); }
     t?.addEventListener('click', () => {
       const open = $('#nav-links').classList.toggle('open');
+      solid();
       t.setAttribute('aria-expanded', String(open));
       t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     });

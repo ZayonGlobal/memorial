@@ -49,8 +49,13 @@ send people to the ScholarEdu site instead.
 Go to **/admin** and sign in with **jimohdaniel01@gmail.com** and the password
 you already use for that account in ScholarEdu. Then:
 
-- **Home & settings:** his name, dates, portrait, the opening line, the four
-  values and the funeral service banner
+- **Home & settings:** his name and dates, the home slideshow (his portrait,
+  the first headline, the small orange word beside it and the seconds per
+  slide), the welcome line, the four values and the funeral service details
+  (these show in the strip at the bottom of the slideshow)
+- **Seasons & photos:** give any season a **Slideshow headline** (2–5 words,
+  e.g. "The Boy from Ilorin") and it joins the home slideshow, using that
+  season's cover photo or its first photo
 - **Life story & timeline:** the biography sections, the "At a Glance" card
   and the timeline
 - **Seasons & photos:** the write-up for each season and the family's photos
@@ -74,7 +79,7 @@ you already use for that account in ScholarEdu. Then:
 ```
 index.html  story.html  seasons.html  children.html
 tributes.html  gallery.html  admin.html  tribute-book.html
-assets/css/style.css      site design (colours, type, motion)
+assets/css/style.css      site design: black, white & burnt orange; slideshow motion
 assets/css/admin.css      admin panel
 assets/js/config.js       Supabase URL + publishable key (safe to be public)
 assets/js/lib.js          shared helpers: header/footer, uploads, lightbox

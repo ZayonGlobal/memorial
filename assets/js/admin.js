@@ -366,11 +366,14 @@ async function viewHome(c) {
       ${F({ key: 'name', label: 'His full name' })}
       <div class="grid2">${F({ key: 'birth_year', label: 'Year of birth' })}${F({ key: 'death_year', label: 'Year of passing' })}</div>
     </div></section>
-    <section class="box"><div class="box-head"><h2>Opening of the home page</h2></div><div class="box-body ed">
-      ${F({ key: 'portrait_url', label: 'Portrait (shown in the arched frame)', type: 'image', help: 'A tall (portrait) photo works best.' })}
-      <div class="grid2">${F({ key: 'tagline_before', label: 'Line, first part', placeholder: 'A life lived with' })}${F({ key: 'tagline_highlight', label: 'Line, highlighted part (gold, italic)', placeholder: 'faith, love & purpose' })}</div>
+    <section class="box"><div class="box-head"><h2>Home slideshow</h2><p class="help">Slide 1 is his portrait. The next slides come from every season that has a "Slideshow headline" (under Seasons &amp; photos).</p></div><div class="box-body ed">
+      ${F({ key: 'portrait_url', label: 'Portrait (first slide, fills the screen)', type: 'image', help: 'A wide (landscape) photo works best on computers; the photo is cropped to fill the screen. Darker, warmly lit photos look best behind white text.' })}
+      <div class="grid2">${F({ key: 'hero_headline', label: 'First slide headline (large capitals)', placeholder: 'A Life Well Lived' })}${F({ key: 'hero_accent', label: 'Small orange word beside it', placeholder: 'Forever loved' })}${F({ key: 'slide_seconds', label: 'Seconds per slide', type: 'number', help: '3 to 15. Default 6.' })}</div>
+    </div></section>
+    <section class="box"><div class="box-head"><h2>Welcome (under the slideshow)</h2></div><div class="box-body ed">
+      <div class="grid2">${F({ key: 'tagline_before', label: 'Line, first part', placeholder: 'A life lived with' })}${F({ key: 'tagline_highlight', label: 'Line, highlighted part (orange, italic)', placeholder: 'faith, love & purpose' })}</div>
       ${F({ key: 'welcome', label: 'Welcome message', type: 'textarea', rows: 3 })}
-      ${F({ key: 'saying', label: 'A saying he was known for (under the portrait)' })}
+      ${F({ key: 'saying', label: 'A saying he was known for (shown in "Who He Was")' })}
     </div></section>
     <section class="box"><div class="box-head"><h2>Who He Was</h2></div><div class="box-body ed">
       ${F({ key: 'about', label: 'Paragraph about his character', type: 'textarea', rows: 4 })}
@@ -379,8 +382,8 @@ async function viewHome(c) {
         ${fieldHtml({ key: 'title', label: 'Title' }, v.title)}</div>
         ${fieldHtml({ key: 'text', label: 'Short description', type: 'textarea', rows: 2 }, v.text)}</div>`).join('')}
     </div></section>
-    <section class="box"><div class="box-head"><h2>Funeral service banner</h2></div><div class="box-body ed">
-      ${F({ key: 'show_service', label: 'Show the service banner at the top of the home page', type: 'switch' })}
+    <section class="box"><div class="box-head"><h2>Funeral service details</h2></div><div class="box-body ed">
+      ${F({ key: 'show_service', label: 'Show the service details in the strip at the bottom of the slideshow', type: 'switch' })}
       <div class="grid2">${F({ key: 'service_title', label: 'Title', placeholder: 'Funeral Service' })}${F({ key: 'service_date', label: 'Date', placeholder: 'Saturday, 12 December 2026' })}</div>
       <div class="grid2">${F({ key: 'service_time', label: 'Time' })}${F({ key: 'service_venue', label: 'Venue, city' })}</div>
       ${F({ key: 'service_map_url', label: 'Google Maps link', type: 'url', placeholder: 'https://maps.app.goo.gl/…' })}
@@ -509,6 +512,7 @@ async function viewSeasons(c) {
     newItem: () => ({ numeral: '', title: 'New season', eyebrow: '', writeup: '', period: '' }),
     layout: (r) => `<div class="grid2">${fieldHtml({ key: 'title', label: 'Title' }, r.title)}${fieldHtml({ key: 'numeral', label: 'Chapter number', placeholder: 'IX' }, r.numeral)}${fieldHtml({ key: 'sort', label: 'Order', type: 'number' }, r.sort)}</div>
       <div class="grid2">${fieldHtml({ key: 'period', label: 'Years', placeholder: '1960s – 1970s' }, r.period)}${fieldHtml({ key: 'eyebrow', label: 'Short line under the title', placeholder: 'Where it all began' }, r.eyebrow)}</div>
+      ${fieldHtml({ key: 'hero_line', label: 'Slideshow headline on the home page (leave empty to leave this season out)', placeholder: 'The Boy from Ilorin', nullable: true, help: 'Keep it short: 2 to 5 words. It uses the cover photo below, or the first photo of this season.' }, r.hero_line)}
       ${fieldHtml({ key: 'writeup', label: 'Write-up (80–150 words)', type: 'textarea', rows: 5 }, r.writeup)}
       ${fieldHtml({ key: 'cover_url', label: 'Cover photo for the home page (optional — otherwise the first photo is used)', type: 'image' }, r.cover_url)}`,
     extra: (r, box) => seasonPhotos(r, box)
