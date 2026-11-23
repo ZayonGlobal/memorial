@@ -23,7 +23,7 @@ main.innerHTML = `
     <a class="btn btn-gold rise d3" href="#upload">${icon.plus()}Share a Photo</a>
   </div>
   <div class="wrap" style="padding-bottom:100px">
-    <div class="pills" role="group" aria-label="Filter photos by season" id="filters" style="padding-bottom:28px;border-bottom:1px solid rgba(195,165,122,.18)"></div>
+    <div class="pills" role="group" aria-label="Filter photos by season" id="filters" style="padding-bottom:28px;border-bottom:1px solid rgba(217,115,43,.18)"></div>
     <div class="masonry" id="grid" style="margin-top:28px"></div>
     <div class="center" style="margin-top:28px"><button class="btn btn-ghost" type="button" id="more" hidden>Load more photos</button></div>
   </div>

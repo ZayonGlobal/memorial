@@ -1,63 +1,92 @@
-import { sb, layout, esc, icon, valueIcon, placeholder, ornament, bokeh, publicUrl, reveal, candleCount, fmtDate } from './lib.js';
+import { sb, layout, esc, icon, valueIcon, placeholder, ornament, bokeh, publicUrl, safeUrl, reveal, candleCount, fmtDate } from './lib.js';
 
 const main = document.getElementById('main');
 const s = await layout('home');
 
 const [seasonsR, kidsR, tribR, candles] = await Promise.all([
-  sb.from('memorial_seasons').select('id,sort,numeral,title,period,cover_url').order('sort').limit(4),
+  sb.from('memorial_seasons').select('*').order('sort'),
   sb.from('memorial_children').select('id,sort,name,relation,duration,quote,photo_url').order('sort'),
   sb.from('memorial_tributes').select('id,name,relationship,location,message,created_at,featured')
     .eq('status', 'approved').order('featured', { ascending: false }).order('created_at', { ascending: false }).limit(3),
   candleCount()
 ]);
-const seasons = seasonsR.data || [];
+const allSeasons = seasonsR.data || [];
+const seasons = allSeasons.slice(0, 4);
 const kids = kidsR.data || [];
 const tributes = tribR.data || [];
 
 // Season covers: use cover_url, else the first family photo of that season
-const needCover = seasons.filter((x) => !x.cover_url).map((x) => x.id);
+const needCover = allSeasons.filter((x) => !x.cover_url).map((x) => x.id);
 if (needCover.length) {
   const { data } = await sb.from('memorial_season_photos').select('season_id,image_url,sort').in('season_id', needCover).order('sort');
-  (data || []).forEach((p) => { const se = seasons.find((x) => x.id === p.season_id); if (se && !se.cover_url) se.cover_url = p.image_url; });
+  (data || []).forEach((p) => { const se = allSeasons.find((x) => x.id === p.season_id); if (se && !se.cover_url) se.cover_url = p.image_url; });
 }
 
-const values = Array.isArray(s.values) ? s.values : [];
-const portrait = s.portrait_url ? `<img class="cover" src="${esc(publicUrl(s.portrait_url))}" alt="Portrait of ${esc(s.name || 'him')}">` : placeholder('His portrait');
+// ---------- slideshow slides: his portrait first, then every season that has a headline ----------
+const slides = [{
+  img: s.portrait_url, alt: `Portrait of ${s.name || 'him'}`,
+  title: s.hero_headline || 'A Life Well Lived', word: s.hero_accent || 'Forever loved',
+  k: [s.birth_year, s.death_year].filter(Boolean).join(' — ')
+}].concat(allSeasons.filter((x) => (x.hero_line || '').trim()).map((x) => ({
+  img: x.cover_url, alt: x.title, title: x.hero_line, word: x.title,
+  k: `Chapter ${x.numeral || ''}${x.period ? ' · ' + x.period : ''}`
+})));
+const hold = Math.min(15, Math.max(3, Number(s.slide_seconds) || 6));
 
+const values = Array.isArray(s.values) ? s.values : [];
 main.innerHTML = `
-<section class="dark hero">
-  ${bokeh([['left:4%', 'top:12%', 220, 0], ['left:30%', 'top:62%', 140, -6], ['left:48%', 'top:8%', 90, -11], ['right:6%', 'top:6%', 260, -3], ['right:30%', 'bottom:14%', 170, -9], ['left:14%', 'bottom:8%', 70, -14], ['right:2%', 'bottom:30%', 110, -7]])}
-  <div class="wrap">
-    <div class="hero-text">
-      <p class="eyebrow rise" style="font-size:23px">In loving memory of</p>
-      <h1 class="h1 rise d1" style="font-size:clamp(52px,7vw,94px)">${esc(s.name || '')}</h1>
-      <p class="years rise d2">${esc(s.birth_year || '')} — ${esc(s.death_year || '')}</p>
-      ${s.tagline_before || s.tagline_highlight ? `<p class="tagline rise d3">${esc(s.tagline_before || '')} <em>${esc(s.tagline_highlight || '')}</em>.</p>` : ''}
-      ${s.welcome ? `<p class="lead welcome rise d4">${esc(s.welcome)}</p>` : ''}
-      <div class="hero-actions rise d5">
+<section class="hx" id="hx" aria-roledescription="carousel" aria-label="Moments from his life" style="--hold:${hold}s">
+  ${slides.map((sl, i) => `
+  <div class="hx-slide" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${slides.length}" aria-hidden="${i ? 'true' : 'false'}">
+    <div class="hx-bg">${sl.img ? `<img src="${esc(publicUrl(sl.img))}" alt="${esc(sl.alt)}" ${i ? 'fetchpriority="low"' : 'fetchpriority="high"'} decoding="async">` : placeholder(i ? 'Season photo' : 'His portrait')}</div>
+  </div>`).join('')}
+  <div class="hx-shade" aria-hidden="true"></div>
+  <div class="hx-copy">
+    <div class="wrap">
+      <p class="hx-eyebrow">In loving memory of <b>${esc(s.name || '')}</b></p>
+      <div class="hx-stack">
+        ${slides.map((sl, i) => `
+        <div class="hx-line" data-line="${i}" aria-hidden="${i ? 'true' : 'false'}">
+          ${i === 0 ? '<h1 class="hx-title">' : '<p class="hx-title" role="heading" aria-level="2">'}${esc(sl.title)}${i === 0 ? '</h1>' : '</p>'}
+          <span class="hx-side"><span class="w">${esc(sl.word)}</span>${sl.k ? `<span class="k">${esc(sl.k)}</span>` : ''}</span>
+        </div>`).join('')}
+      </div>
+      <div class="hx-cta">
         <a class="btn btn-gold" href="story.html">Read His Story</a>
         <a class="btn btn-ghost" href="children.html">${icon.play(14, 'currentColor')}Watch His Children</a>
       </div>
     </div>
-    <div class="portrait rise d3">
-      <div class="portrait-frame"><div class="portrait-inner">${portrait}</div></div>
-      ${s.saying ? `<p class="saying">“${esc(s.saying)}”</p>` : ''}
+  </div>
+  <div class="hx-band">
+    <div class="wrap">
+      ${s.show_service ? `<div class="hx-who"><b>${esc(s.service_title || 'Funeral Service')}</b><span>${esc([s.service_date, s.service_time, s.service_venue].filter(Boolean).join(' · '))}${[['service_livestream_url', 'Livestream'], ['service_programme_url', 'Order of service'], ['service_map_url', 'Map']].filter(([k]) => safeUrl(s[k])).map(([k, l]) => ` · <a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" style="color:var(--gold)">${l} →</a>`).join('')}</span></div>`
+        : `<div class="hx-who"><b>${esc(s.name || '')}</b><span>${esc([s.birth_year, s.death_year].filter(Boolean).join(' — '))}</span></div>`}
+      ${slides.length > 1 ? `<div class="hx-ctrl">
+        <span class="num" aria-hidden="true">01</span><span class="of" aria-hidden="true">/ ${String(slides.length).padStart(2, '0')}</span>
+        <div class="hx-bars" role="group" aria-label="Choose a slide">${slides.map((sl, i) => `<button type="button" aria-label="Show slide ${i + 1}: ${esc(sl.title)}"></button>`).join('')}</div>
+        <button type="button" class="hx-pp" aria-label="Pause slideshow">${icon.pause()}</button>
+      </div>` : ''}
+      <a class="hx-down" href="#explore" aria-label="Scroll down">${icon.down()}</a>
     </div>
   </div>
 </section>
 
-<div class="dark-2 flow-root">
+<div class="dark-2 flow-root" id="explore">
   <div class="wrap">
-    <section class="explore" aria-label="Explore">
-      <a class="explore-card lift rise d6" href="story.html"><span class="eyebrow" style="font-size:19px">Where his journey began</span><span class="t">His Life Story</span><span class="d">From his roots and early years to the family and legacy he leaves behind.</span><span class="go uline">Read his story →</span></a>
-      <a class="explore-card lift rise d6" href="children.html"><span class="eyebrow" style="font-size:19px">In their own words</span><span class="t">The Children Speak</span><span class="d">His children share their memories of him, one after the other.</span><span class="go uline">Watch the videos →</span></a>
-      <a class="explore-card lift rise d6" href="tributes.html"><span class="eyebrow" style="font-size:19px">Share what he meant to you</span><span class="t">Leave a Tribute</span><span class="d">Write a few words, or add a photo you have with him to the gallery.</span><span class="go uline">Write a tribute →</span></a>
+    ${s.tagline_before || s.tagline_highlight || s.welcome ? `<div class="center reveal" style="padding-top:96px;max-width:760px;margin:0 auto">
+      ${s.tagline_before || s.tagline_highlight ? `<p style="margin:0;font-family:var(--serif);font-size:clamp(30px,3.4vw,44px);line-height:1.2">${esc(s.tagline_before || '')} <em style="color:var(--gold)">${esc(s.tagline_highlight || '')}</em>.</p>` : ''}
+      ${s.welcome ? `<p class="lead" style="margin:16px auto 0;max-width:600px">${esc(s.welcome)}</p>` : ''}
+    </div>` : ''}
+    <section class="explore flat" aria-label="Explore">
+      <a class="explore-card lift reveal" href="story.html"><span class="eyebrow" style="font-size:19px">Where his journey began</span><span class="t">His Life Story</span><span class="d">From his roots and early years to the family and legacy he leaves behind.</span><span class="go uline">Read his story →</span></a>
+      <a class="explore-card lift reveal" href="children.html"><span class="eyebrow" style="font-size:19px">In their own words</span><span class="t">The Children Speak</span><span class="d">His children share their memories of him, one after the other.</span><span class="go uline">Watch the videos →</span></a>
+      <a class="explore-card lift reveal" href="tributes.html"><span class="eyebrow" style="font-size:19px">Share what he meant to you</span><span class="t">Leave a Tribute</span><span class="d">Write a few words, or add a photo you have with him to the gallery.</span><span class="go uline">Write a tribute →</span></a>
     </section>
   </div>
   <section class="wrap section" aria-labelledby="who">
     <div class="split reveal">
       <div><p class="eyebrow">The man we knew</p><h2 class="h2" id="who">Who He Was</h2></div>
-      <p class="lead ph-text">${esc(s.about || '')}</p>
+      <div><p class="lead ph-text" style="margin:0">${esc(s.about || '')}</p>${s.saying ? `<p style="margin:18px 0 0;font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold-light)">“${esc(s.saying)}”</p>` : ''}</div>
     </div>
     ${values.length ? `<div class="values">${values.map((v) => `
       <div class="value reveal"><span style="color:var(--gold)">${valueIcon(v.icon)}</span><h3>${esc(v.title)}</h3><p>${esc(v.text)}</p></div>`).join('')}</div>` : ''}
@@ -69,7 +98,7 @@ main.innerHTML = `
     <div class="center reveal">
       <p class="eyebrow">Chapters of his life</p>
       <h2 class="h2" id="seasons-h">Seasons of His Life</h2>
-      ${ornament('#B08E5E')}
+      ${ornament('#C4621F')}
       <p class="lead" style="max-width:560px;margin:22px auto 0">Photographs from every season of his life, each with a few words on who he was then.</p>
     </div>
     <div class="season-cards">
@@ -139,3 +168,57 @@ main.innerHTML = `
 
 main.removeAttribute('aria-busy');
 reveal();
+slideshow(document.getElementById('hx'), slides.length, hold);
+
+// ---------- slideshow controller ----------
+function slideshow(root, n, holdSec) {
+  const bgs = [...root.querySelectorAll('.hx-slide')];
+  const lines = [...root.querySelectorAll('.hx-line')];
+  const bars = [...root.querySelectorAll('.hx-bars button')];
+  const pp = root.querySelector('.hx-pp');
+  const num = root.querySelector('.hx-ctrl .num');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0, timer = null, paused = reduce, visible = true;
+  const layer = (k) => [bgs[k], lines[k]];
+
+  function enter(k) {
+    layer(k).forEach((el) => { el.classList.remove('off'); void el.offsetWidth; el.classList.add('on'); el.setAttribute('aria-hidden', 'false'); });
+  }
+  function leave(k) {
+    layer(k).forEach((el) => {
+      el.classList.remove('on'); el.classList.add('off'); el.setAttribute('aria-hidden', 'true');
+      clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('off'), 1100);
+    });
+  }
+  function ui() {
+    if (num) num.textContent = String(i + 1).padStart(2, '0');
+    bars.forEach((b, j) => {
+      b.classList.remove('run', 'done'); void b.offsetWidth;
+      if (j < i) b.classList.add('done');
+      if (j === i) { b.setAttribute('aria-current', 'true'); if (!paused) b.classList.add('run'); else b.classList.add('done'); }
+      else b.removeAttribute('aria-current');
+    });
+    if (pp) {
+      pp.innerHTML = paused ? icon.playSmall() : icon.pause();
+      pp.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+    }
+    root.classList.toggle('paused', paused);
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (!paused && visible && n > 1) timer = setTimeout(() => go(i + 1), holdSec * 1000);
+  }
+  function go(k) {
+    k = (k + n) % n;
+    if (k === i) return;
+    leave(i); i = k; enter(i); ui(); schedule();
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => { enter(0); ui(); schedule(); }));
+  if (n < 2) return;
+  bars.forEach((b, j) => b.addEventListener('click', () => go(j)));
+  pp?.addEventListener('click', () => { paused = !paused; ui(); schedule(); });
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; schedule(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting && !document.hidden; schedule(); }, { threshold: 0.2 }).observe(root);
+  }
+}
