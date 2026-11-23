@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tribute Book — In Loving Memory</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EFE8DE;color:#2A2622;font-family:'Inter',system-ui,sans-serif;font-size:11pt;line-height:1.6}
+  .bar{position:sticky;top:0;background:#1F1C19;color:#F6F2EC;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .bar button{min-height:44px;padding:0 20px;border:0;background:#C3A57A;color:#1F1C19;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;cursor:pointer}
+  .book{max-width:760px;margin:24px auto;background:#FBF9F6;padding:64px 64px 48px;box-shadow:0 2px 20px rgba(0,0,0,.08)}
+  .cover{text-align:center;padding:80px 0 100px;border-bottom:1px solid #D8CDBE;margin-bottom:40px}
+  .cover .e{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:20pt;color:#7D5F35;margin:0}
+  .cover h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:40pt;line-height:1.05;margin:10px 0 0}
+  .cover .y{margin:16px 0 0;letter-spacing:.3em;text-transform:uppercase;font-size:10pt;color:#5A524A}
+  .cover .t{margin:48px 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-size:22pt}
+  .cover .n{margin:6px 0 0;color:#6B5F52;font-size:10pt}
+  article{break-inside:avoid;padding:26px 0;border-bottom:1px solid #E2D8CA}
+  article p{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-size:15pt;line-height:1.5;white-space:pre-line}
+  article img{display:block;max-width:100%;max-height:300px;margin-top:14px;object-fit:cover}
+  article footer{margin-top:12px;font-size:9.5pt;color:#6B5F52}
+  article footer b{color:#2A2622;font-weight:600}
+  .empty{text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16pt;color:#6B5F52}
+  @media (max-width:640px){.book{padding:32px 22px}}
+  @media print{
+    body{background:#fff}
+    .bar{display:none}
+    .book{box-shadow:none;margin:0;max-width:none;padding:0}
+    .cover{page-break-after:always;border:0;padding-top:30vh}
+    @page{margin:20mm}
+  }
+</style>
+</head>
+<body>
+<div class="bar"><span>Tribute book — use Print → “Save as PDF” to keep a copy.</span><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
+<div class="book" id="book"><p class="empty">Loading tributes…</p></div>
+<script type="module">
+  import { sb, esc, publicUrl, fmtDate, getSettings } from './assets/js/lib.js';
+  const s = await getSettings();
+  const { data, error } = await sb.from('memorial_tributes').select('*').eq('status', 'approved').order('featured', { ascending: false }).order('created_at');
+  const rows = data || [];
+  document.title = `Tributes — ${s.name || 'In Loving Memory'}`;
+  document.getElementById('book').innerHTML = `
+    <section class="cover">
+      <p class="e">In loving memory of</p>
+      <h1>${esc(s.name || '')}</h1>
+      <p class="y">${esc(s.birth_year || '')} — ${esc(s.death_year || '')}</p>
+      <p class="t">Tributes from family &amp; friends</p>
+      <p class="n">${rows.length} ${rows.length === 1 ? 'tribute' : 'tributes'}</p>
+    </section>
+    ${error ? `<p class="empty">Could not load tributes.</p>` : rows.length ? rows.map((t) => `
+      <article>
+        <p>${esc(t.message)}</p>
+        ${t.photo_path ? `<img src="${esc(publicUrl(t.photo_path))}" alt="">` : ''}
+        <footer><b>${esc(t.name)}</b> · ${esc(t.relationship)}${t.location ? ' · ' + esc(t.location) : ''} · ${esc(fmtDate(t.created_at))}</footer>
+      </article>`).join('') : '<p class="empty">No published tributes yet.</p>'}`;
+</script>
+</body>
+</html>
