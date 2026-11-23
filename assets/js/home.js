@@ -36,13 +36,8 @@ const hold = Math.min(15, Math.max(3, Number(s.slide_seconds) || 6));
 const values = Array.isArray(s.values) ? s.values : [];
 main.innerHTML = `
 <section class="hx" id="hx" aria-roledescription="carousel" aria-label="Moments from his life" style="--hold:${hold}s">
-  ${slides.map((sl, i) => `
-  <div class="hx-slide" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${slides.length}" aria-hidden="${i ? 'true' : 'false'}">
-    <div class="hx-bg">${sl.img ? `<img src="${esc(publicUrl(sl.img))}" alt="${esc(sl.alt)}" ${i ? 'fetchpriority="low"' : 'fetchpriority="high"'} decoding="async">` : placeholder(i ? 'Season photo' : 'His portrait')}</div>
-  </div>`).join('')}
-  <div class="hx-shade" aria-hidden="true"></div>
-  <div class="hx-copy">
-    <div class="wrap">
+  <div class="wrap hx-grid">
+    <div class="hx-copy">
       <p class="hx-eyebrow">In loving memory of <b>${esc(s.name || '')}</b></p>
       <div class="hx-stack">
         ${slides.map((sl, i) => `
@@ -51,10 +46,17 @@ main.innerHTML = `
           <span class="hx-side"><span class="w">${esc(sl.word)}</span>${sl.k ? `<span class="k">${esc(sl.k)}</span>` : ''}</span>
         </div>`).join('')}
       </div>
+      ${s.welcome ? `<p class="hx-lead">${esc(s.welcome)}</p>` : ''}
       <div class="hx-cta">
-        <a class="btn btn-gold" href="story.html">Read His Story</a>
-        <a class="btn btn-ghost" href="children.html">${icon.play(14, 'currentColor')}Watch His Children</a>
+        <a class="btn btn-dark" href="story.html">Read His Story ${icon.arrowUpRight()}</a>
+        <a class="btn btn-ghost" href="children.html">Watch His Children ${icon.right(16)}</a>
       </div>
+    </div>
+    <div class="hx-frame">
+      ${slides.map((sl, i) => `
+      <div class="hx-slide" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${slides.length}" aria-hidden="${i ? 'true' : 'false'}">
+        <div class="hx-bg">${sl.img ? `<img src="${esc(publicUrl(sl.img))}" alt="${esc(sl.alt)}" ${i ? 'fetchpriority="low"' : 'fetchpriority="high"'} decoding="async">` : placeholder(i ? 'Season photo' : 'His portrait')}</div>
+      </div>`).join('')}
     </div>
   </div>
   <div class="hx-band">
@@ -73,9 +75,8 @@ main.innerHTML = `
 
 <div class="dark-2 flow-root" id="explore">
   <div class="wrap">
-    ${s.tagline_before || s.tagline_highlight || s.welcome ? `<div class="center reveal" style="padding-top:96px;max-width:760px;margin:0 auto">
+    ${s.tagline_before || s.tagline_highlight ? `<div class="center reveal" style="padding-top:96px;max-width:760px;margin:0 auto">
       ${s.tagline_before || s.tagline_highlight ? `<p style="margin:0;font-family:var(--serif);font-size:clamp(30px,3.4vw,44px);line-height:1.2">${esc(s.tagline_before || '')} <em style="color:var(--gold)">${esc(s.tagline_highlight || '')}</em>.</p>` : ''}
-      ${s.welcome ? `<p class="lead" style="margin:16px auto 0;max-width:600px">${esc(s.welcome)}</p>` : ''}
     </div>` : ''}
     <section class="explore flat" aria-label="Explore">
       <a class="explore-card lift reveal" href="story.html"><span class="eyebrow" style="font-size:19px">Where his journey began</span><span class="t">His Life Story</span><span class="d">From his roots and early years to the family and legacy he leaves behind.</span><span class="go uline">Read his story →</span></a>
