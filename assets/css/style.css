@@ -685,3 +685,26 @@ canvas.petals{display:none}
 @media(max-width:860px){.hx-frame{max-width:440px;justify-self:center}.hx-grid{gap:32px}.hx-title{font-size:clamp(38px,9vw,58px)}}
 @media(max-width:640px){.section{padding-top:56px;padding-bottom:56px}.hx-cta .btn{min-height:48px}.nav-links{background:var(--cream)}}
 @media(prefers-reduced-motion:reduce){.lift:hover{transform:none}}
+
+/* Accessible contrast: separate decorative mint from foreground ink. */
+:root{--text:#20382d;--text-2:#304b3d;--muted:#42594c;--muted-2:#4b6054;--on-dark:#20382d;--on-dark-2:#304b3d;--on-dark-3:#42594c;--gold:#286247;--gold-dark:#214e39;--gold-mid:#38775c;--gold-light:#c5ebd9;--control-border:#708a7b;--black:#20382d}
+a{color:var(--gold-dark)}a:hover{color:#163e2b}
+.btn-gold,.btn-dark,.hx-down{background:#a8dfc5;color:#20382d;border:1px solid #38775c}
+.btn-gold:hover,.btn-dark:hover,.hx-down:hover{background:#286247;color:#fff}
+.btn-outline,.btn-ghost,.nav-toggle,.nav-candle,.icon-btn,.toggle-btn,.pill,.hx-pp{border-color:var(--control-border);color:var(--black)}
+.field input,.field select,.field textarea,.drop{border-color:var(--control-border);color:var(--text)}
+.field input::placeholder,.field textarea::placeholder{color:#4b6054;opacity:1}
+:focus-visible{outline:3px solid #286247;outline-offset:3px}
+.hx-bars button::before{background:#708a7b}
+.site-footer .admin-link{opacity:1;color:var(--muted)}
+.ph,.ph.light,.hx-frame .hx-bg .ph,.portrait-inner .ph{background:#edf6f0;color:#42594c}
+.season-card,.season-card:hover,.tile .tcap,.tile .tag,.photo .pcap,.video-teaser,.video-teaser:hover,.player,.player .idle,.lightbox{color:#fff}
+.season-card .cap,.tile .tcap,.photo .pcap{background:linear-gradient(to top,#101e17 0%,rgba(16,30,23,.92) 65%,transparent 100%)}
+.season-card .k,.photo .pcap .s,.lightbox figcaption small{color:#c5ebd9}
+.video-teaser .lead,.video-teaser .eyebrow,.player .idle .label{color:#e5f2e9!important}
+.player .idle button,.lightbox .icon-btn{color:#fff;border-color:#a8dfc5}
+.lightbox .icon-btn:hover{color:#c5ebd9;border-color:#fff}
+.lightbox :focus-visible,.player :focus-visible,.video-teaser:focus-visible{outline-color:#c5ebd9}
+.pill:hover,.pill[aria-pressed="true"],.toggle-btn[aria-pressed="true"],.btn-outline:hover,.nav-candle:hover{background:#20382d;color:#fff}
+.pill:hover .num,.pill[aria-pressed="true"] .num{color:#c5ebd9}
+@media(forced-colors:active){.btn,.pill,.icon-btn,.nav-toggle{border:1px solid ButtonText}}
