@@ -714,3 +714,24 @@ a{color:var(--gold-dark)}a:hover{color:#163e2b}
 .hx-frame .hx-bg img{object-fit:contain;object-position:center;animation:none!important;transform:none!important}
 .hx-frame .hx-bg{transform:none!important}
 @media(max-width:860px){.hx-frame{width:100%;max-width:560px;aspect-ratio:4/5;max-height:none;border-radius:16px}}
+
+/* Full-bleed photographic hero, with readable foreground content. */
+.hx{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100svh;height:auto;max-height:none;padding:100px 0 0;background:#142c23;color:#fff}
+.hx .hx-grid{position:static;display:flex;align-items:center;flex:1;width:100%;padding-top:64px;padding-bottom:64px}
+.hx .hx-frame{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:auto;border:0;outline:0;border-radius:0;box-shadow:none;background:#142c23;z-index:0;pointer-events:none}
+.hx .hx-frame::after{content:"";position:absolute;inset:0;z-index:3;background:linear-gradient(90deg,rgba(10,25,19,.92) 0%,rgba(10,25,19,.79) 38%,rgba(10,25,19,.25) 75%,rgba(10,25,19,.12) 100%);pointer-events:none}
+.hx .hx-frame .hx-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hx .hx-copy{position:relative;z-index:4;max-width:720px;width:100%;top:auto;bottom:auto;transform:none}
+.hx .hx-title,.hx .hx-eyebrow b{color:#fff}
+.hx .hx-eyebrow,.hx .hx-lead,.hx .hx-side .k{color:#f0f8f3}
+.hx .hx-side .w{color:#c5ebd9}
+.hx .hx-cta .btn-ghost{color:#fff;border:1px solid #c5ebd9;background:rgba(10,25,19,.55)}
+.hx .hx-cta .btn-ghost:hover{background:#fff;color:#20382d}
+.hx .hx-band{position:relative;z-index:5;background:rgba(10,25,19,.88);border-top:1px solid #708a7b;backdrop-filter:blur(8px)}
+.hx .hx-who b,.hx .hx-who span,.hx .hx-ctrl,.hx .hx-ctrl .num,.hx .hx-ctrl .of,.hx .hx-pp{color:#fff}
+.hx .hx-who a{color:#c5ebd9!important}
+.hx .hx-bars button::before{background:#91a99c}
+.hx .hx-bars button::after{background:#c5ebd9}
+.hx .hx-pp{border-color:#c5ebd9}
+.hx :focus-visible{outline-color:#c5ebd9}
+@media(max-width:860px){.hx{padding-top:80px}.hx .hx-grid{align-items:flex-end;padding-top:clamp(140px,30vh,300px);padding-bottom:40px}.hx .hx-frame::after{background:linear-gradient(0deg,rgba(10,25,19,.96) 0%,rgba(10,25,19,.86) 40%,rgba(10,25,19,.32) 75%,rgba(10,25,19,.1) 100%)}.hx .hx-frame .hx-bg img{object-position:center top}.hx .hx-copy{max-width:100%}}
