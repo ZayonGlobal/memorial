@@ -79,6 +79,21 @@ main.innerHTML = `
   </section>
 </div>
 
+<section class="archive-teaser on-light" aria-labelledby="archive-seasons-title">
+  <div class="wrap archive-teaser-layout">
+    <div class="archive-teaser-pictures">
+      <img src="assets/img/archive/younger-IMG_20261124_080144_901.webp" alt="Photograph from his younger years" loading="lazy" decoding="async">
+      <img src="assets/img/archive/kainji-IMG_20261124_110925_320.webp" alt="Photograph from the Kainji mission collection" loading="lazy" decoding="async">
+    </div>
+    <div class="archive-teaser-copy">
+      <p class="eyebrow">A family archive</p>
+      <h2 class="h2" id="archive-seasons-title">His Story in Photographs</h2>
+      <p class="lead">Explore 27 preserved photographs from his younger years and the Auna, Jika, Balugu, Kainji and Wawa collections. Each image retains its original setting.</p>
+      <a class="btn btn-dark" href="gallery.html#family-archive">View the restored photo archive →</a>
+    </div>
+  </div>
+</section>
+
 <section class="next-band">
   <div class="wrap">
     <div><p class="eyebrow gd" style="font-size:20px">Do you have a photo of him?</p><p class="big">Add it to the season it belongs to</p></div>
