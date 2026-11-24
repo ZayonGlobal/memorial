@@ -822,3 +822,24 @@ img,video,iframe{max-width:100%}
 @media(max-width:600px){.archive-heading{align-items:start;flex-direction:column;gap:14px}.archive-filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}.archive-filters .pill{white-space:nowrap;flex-shrink:0}.archive-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.archive-image{height:220px}.archive-photo-caption{padding:12px;display:block}.archive-photo-caption span{display:block}.archive-photo-caption span:last-child{margin-top:4px}.archive-teaser{padding:48px 0}.archive-teaser-pictures{gap:8px}.archive-teaser-pictures img{height:230px}.archive-teaser-pictures img:nth-child(2){height:200px;margin-top:24px}.archive-story-actions .btn{width:100%}}
 @media(max-width:380px){.archive-grid{grid-template-columns:1fr}.archive-image{height:300px}}
 @media(prefers-reduced-motion:reduce){.archive-photo{transition:none}.archive-photo:hover{transform:none}}
+/* Full autobiography page (full-story.html) */
+.fs-layout{display:flex;flex-wrap:wrap;gap:64px;padding-top:90px;padding-bottom:110px;align-items:flex-start}
+.fs-toc{flex:1 1 230px;position:sticky;top:100px;max-height:calc(100vh - 130px);overflow:auto}
+.fs-toc summary{list-style:none;cursor:pointer}.fs-toc summary::-webkit-details-marker{display:none}
+.fs-toc .k{margin:0 0 14px;font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dark)}
+.fs-toc ol{margin:0;padding:0;list-style:none;counter-reset:c}
+.fs-toc li{counter-increment:c;border-top:1px solid var(--hairline)}
+.fs-toc a{display:flex;gap:10px;padding:9px 0;font-size:14px;line-height:1.35;color:var(--text-2);text-decoration:none}
+.fs-toc a::before{content:counter(c,decimal-leading-zero);color:var(--muted-2);font-size:12px;padding-top:2px}
+.fs-toc a:hover{color:var(--gold-dark)}
+.fs-back{display:inline-block;margin-top:18px;font-size:14px;color:var(--gold-dark)}
+.fs-text{flex:999 1 560px;min-width:0;max-width:720px}
+.fs-text p{margin:0 0 1.1em;font-size:18px;line-height:1.75;color:var(--text-2)}
+.fs-text .fs-ch{margin:64px 0 22px;padding-top:28px;border-top:1px solid var(--hairline);scroll-margin-top:90px}
+.fs-text .fs-ch:first-child{margin-top:0;padding-top:0;border-top:0}
+.fs-text .fs-sub{margin:36px 0 14px;font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.25;color:var(--text)}
+.fs-text .fs-sub span{display:block;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:6px}
+.fs-more{margin-top:48px;padding:30px 32px;border:1px solid var(--hairline);border-radius:20px;background:#FAFAFA;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between}
+.fs-more p{margin:0;font-family:var(--serif);font-size:24px;line-height:1.3}
+.fs-more small{display:block;margin-top:6px;font-family:var(--sans);font-size:14px;color:var(--muted)}
+@media(max-width:900px){.fs-toc{position:static;max-height:none;padding:16px 18px;border:1px solid var(--hairline);border-radius:14px}.fs-toc .k{margin:0}.fs-toc summary::after{content:" +";}.fs-toc details[open] summary::after{content:" −"}.fs-toc details[open] ol{margin-top:12px}.fs-layout{gap:36px;padding-top:56px}}

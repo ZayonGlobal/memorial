@@ -40,6 +40,7 @@ main.innerHTML = `
     <p class="years rise d2">${esc(s.birth_year || '')} — ${esc(s.death_year || '')}</p>
     <div class="rise d3">${ornament()}</div>
     ${s.story_intro ? `<p class="lead rise d4" style="margin-top:26px">${esc(s.story_intro)}</p>` : ''}
+    <p class="rise d4" style="margin-top:22px"><a class="label" href="full-story.html" style="color:var(--gold-dark);font-size:13px;letter-spacing:.14em">Or read it in his own words →</a></p>
   </div>
 </section>
 
@@ -50,6 +51,7 @@ main.innerHTML = `
       ${quote}
       ${sections.slice(quoteAfter).map(secHtml).join('')}
       ${!sections.length ? '<p class="empty">His story will be shared here soon.</p>' : ''}
+      <div class="fs-more reveal"><p>Read his full story in his own words<small>"My Life Journey", the autobiography he wrote, in 18 chapters.</small></p><a class="btn btn-dark" href="full-story.html">Read My Life Journey →</a></div>
     </div>
     <aside class="story-aside">
       ${glance.length ? `<div class="card-white reveal"><h2>At a Glance</h2><dl class="glance">${glance.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>` : ''}
