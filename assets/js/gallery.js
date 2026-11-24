@@ -29,6 +29,18 @@ main.innerHTML = `
   </div>
 </section>
 
+
+<section class="archive-section on-light" id="family-archive" aria-labelledby="archive-title">
+  <div class="wrap section">
+    <div class="archive-heading">
+      <div><p class="eyebrow">Preserved moments</p><h2 class="h2" id="archive-title">The Family Photo Archive</h2>
+      <p class="lead">Restored photographs from his younger years and places connected with his missionary journeys. These photographs retain their original scenes.</p></div>
+      <span class="archive-count" aria-label="14 archive photographs">14 photographs</span>
+    </div>
+    <div class="archive-filters" id="archive-filters" role="group" aria-label="Choose an archive collection"></div>
+    <div class="archive-grid" id="archive-grid"></div>
+  </div>
+</section>
 <section class="on-light" id="upload" style="scroll-margin-top:70px">
   <div class="wrap section" style="display:flex;flex-wrap:wrap;gap:48px 72px">
     <div style="flex:1 1 340px;min-width:0">
@@ -44,6 +56,32 @@ main.innerHTML = `
     <div class="form-card" style="flex:999 1 560px;min-width:0" id="formCard"></div>
   </div>
 </section>`;
+
+
+const archivePhotos = [{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080124_858.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080144_901.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080348_457.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080420_781.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083024_122.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083034_510.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083049_513.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083114_727.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083127_920.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111158_961.webp"},{"group":"jika","label":"Jika","src":"assets/img/archive/jika-IMG_20261124_110720_755.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111403_728.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_110925_320.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_105810_798.webp"}];
+let archiveGroup = 'all';
+const archiveGroups = [['all','All photographs'],['younger','Younger years'],['missions','Missions'],['auna','Auna'],['jika','Jika'],['balugu','Balugu'],['kainji','Kainji'],['wawa','Wawa']];
+function renderArchive() {
+  const subset = archivePhotos.filter(p => archiveGroup === 'all' || (archiveGroup === 'missions' ? p.group !== 'younger' : p.group === archiveGroup));
+  document.getElementById('archive-filters').innerHTML = archiveGroups.map(([key,label]) =>
+    `<button type="button" class="pill" data-archive="${key}" aria-pressed="${key === archiveGroup}">${label}</button>`).join('');
+  document.getElementById('archive-grid').innerHTML = subset.map((p,i) =>
+    `<button type="button" class="archive-photo" data-archive-i="${i}" aria-label="View ${p.label} photograph ${i+1}">
+      <span class="archive-image"><img src="${p.src}" loading="lazy" decoding="async" alt="${p.label} — restored archival photograph"></span>
+      <span class="archive-photo-caption"><span>${p.label}</span><span aria-hidden="true">View photo ↗</span></span>
+    </button>`).join('');
+  document.getElementById('archive-grid').onclick = e => {
+    const tile = e.target.closest('[data-archive-i]');
+    if (!tile) return;
+    lightbox(subset.map(p => ({src:p.src,caption:p.label,meta:'Restored family archive photograph'})), Number(tile.dataset.archiveI));
+  };
+}
+document.getElementById('archive-filters').addEventListener('click', e => {
+  const button=e.target.closest('[data-archive]');
+  if (!button) return;
+  archiveGroup=button.dataset.archive; renderArchive();
+});
+renderArchive();
 
 function renderFilters() {
   const opts = [['all', 'All photos'], ...seasons.map((x) => [x.id, x.title])];

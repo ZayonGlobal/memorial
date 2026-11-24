@@ -61,7 +61,7 @@ main.innerHTML = `
 <section class="next-band">
   <div class="wrap">
     <div><p class="eyebrow gd" style="font-size:20px">Continue</p><p class="big">See him in every season of his life</p></div>
-    <a class="btn btn-dark" href="seasons.html">Seasons of His Life →</a>
+    <div class="archive-story-actions"><a class="btn btn-dark" href="seasons.html">Seasons of His Life →</a><a class="btn btn-outline" href="gallery.html#family-archive">Family Photo Archive →</a></div>
   </div>
 </section>`;
 
