@@ -661,3 +661,6 @@ a{color:var(--gold-dark)}a:hover{color:var(--black)}
   .hx-stack{min-height:0}
   .hx-lead{font-size:16px}
 }
+
+/* Mint memorial palette */
+:root{--gold:#38775c;--gold-dark:#285a45;--gold-mid:#69a88b;--gold-light:#a8dfc5;--cream:#fdfbf6;--hairline:#d5e5da;--black:#203e32}.btn-gold{background:#a8dfc5;color:#203e32}.btn-gold:hover{background:#38775c;color:white}
