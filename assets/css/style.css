@@ -708,3 +708,9 @@ a{color:var(--gold-dark)}a:hover{color:#163e2b}
 .pill:hover,.pill[aria-pressed="true"],.toggle-btn[aria-pressed="true"],.btn-outline:hover,.nav-candle:hover{background:#20382d;color:#fff}
 .pill:hover .num,.pill[aria-pressed="true"] .num{color:#c5ebd9}
 @media(forced-colors:active){.btn,.pill,.icon-btn,.nav-toggle{border:1px solid ButtonText}}
+
+/* Full portrait visibility: preserve original image proportions. */
+.hx-frame{border-radius:20px;aspect-ratio:4/5;max-height:none;background:#edf6f0;max-width:560px}
+.hx-frame .hx-bg img{object-fit:contain;object-position:center;animation:none!important;transform:none!important}
+.hx-frame .hx-bg{transform:none!important}
+@media(max-width:860px){.hx-frame{width:100%;max-width:560px;aspect-ratio:4/5;max-height:none;border-radius:16px}}
