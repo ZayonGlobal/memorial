@@ -45,8 +45,8 @@ function renderLogin(msg = '') {
     </form>
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:10px">
       <button class="linkish" type="button" id="forgot">Forgot password?</button>
-      <button class="linkish" type="button" id="signup">Create an account</button>
     </div>
+    <p class="help" style="margin-top:4px">Only the family admin can sign in here.</p>
     <p class="help" style="margin-top:12px"><a href="index.html" style="color:var(--gold-dark)">← Back to the memorial</a></p>
   </div></div>`;
   const err = (m) => { const e = $('#lerr'); e.textContent = m; e.hidden = !m; };
@@ -63,12 +63,6 @@ function renderLogin(msg = '') {
     if (!email) return err('Type your email above first, then press "Forgot password?" again.');
     const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
     err(error ? error.message : 'If that email has an account, a reset link is on its way. Open it on this device.');
-  };
-  $('#signup').onclick = async () => {
-    const email = $('#em').value.trim(), password = $('#pw').value;
-    if (!email || password.length < 8) return err('Type your email and a password of at least 8 characters above, then press "Create an account".');
-    const { error } = await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
-    err(error ? error.message : 'Check your email and confirm your address. Then ask a family admin to add your email under "Family admins", and sign in here.');
   };
 }
 
@@ -91,13 +85,13 @@ function renderRecovery() {
   });
 }
 
-function renderDenied(email) {
+async function renderDenied(email) {
+  await sb.auth.signOut({ scope: 'local' }).catch(() => {});
   app.innerHTML = `<div class="admin-center"><div class="login">
-    <h1>Not on the family list</h1>
-    <p class="muted" style="margin-top:10px">You're signed in as <b>${esc(email)}</b>, but this email isn't on the list of family admins (or hasn't been confirmed yet). Ask a family admin to add it under "Family admins".</p>
-    <button class="btn btn-outline" type="button" id="so" style="margin-top:18px">Sign out</button>
+    <h1>No access</h1>
+    <p class="muted" style="margin-top:10px"><b>${esc(email)}</b> isn't a family admin for this memorial, so it can't be used here. You've been signed out.</p>
+    <a class="btn btn-outline" href="admin.html" style="margin-top:18px">Back to sign in</a>
   </div></div>`;
-  $('#so').onclick = () => sb.auth.signOut();
 }
 
 // =====================================================================
@@ -110,7 +104,8 @@ const VIEWS = [
   ['seasons', 'Seasons & photos'],
   ['children', "Children's videos"],
   ['admins', 'Family admins'],
-  ['export', 'Export & tribute book']
+  ['export', 'Export & tribute book'],
+  ['account', 'Change password']
 ];
 
 async function pendingCount() {
@@ -155,7 +150,7 @@ function show() {
   });
   const c = $('#content');
   c.innerHTML = '<p class="muted">Loading…</p>';
-  ({ moderation: viewModeration, home: viewHome, story: viewStory, seasons: viewSeasons, children: viewChildren, admins: viewAdmins, export: viewExport }[view] || viewModeration)(c);
+  ({ moderation: viewModeration, home: viewHome, story: viewStory, seasons: viewSeasons, children: viewChildren, admins: viewAdmins, export: viewExport, account: viewAccount }[view] || viewModeration)(c);
   window.scrollTo(0, 0);
 }
 
@@ -600,7 +595,7 @@ async function viewChildren(c) {
 async function viewAdmins(c) {
   const { data, error } = await sb.from('memorial_admins').select('*').order('added_at');
   c.innerHTML = `<h1>Family admins</h1>
-    <p class="intro">People on this list can sign in here to approve tributes and edit the site. Each person signs in with their own email and password. If they don't have an account yet, they press "Create an account" on the sign-in screen and confirm their email.</p>
+    <p class="intro">People on this list can sign in here to approve tributes and edit the site, each with their own email and password. New accounts can't be created from the memorial; a person must already have an account before their email will work here.</p>
     <section class="box"><div class="box-body">
       ${error ? `<p class="err">${esc(error.message)}</p>` : (data || []).map((a) => `<div class="switch"><span><b style="font-weight:500">${esc(a.email)}</b>${a.email.toLowerCase() === me.email.toLowerCase() ? ' <span class="help">(you)</span>' : ''}</span>${a.email.toLowerCase() === me.email.toLowerCase() ? '' : `<button type="button" class="b bad" data-rm="${esc(a.email)}">Remove</button>`}</div>`).join('')}
       <form id="aform" class="grid2" style="margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
@@ -653,4 +648,34 @@ async function viewExport(c) {
     if (error) return toast(error.message);
     download('tributes-all.csv', csv(data, cols));
   };
+}
+
+// =====================================================================
+//  CHANGE PASSWORD (for the signed-in admin)
+// =====================================================================
+async function viewAccount(c) {
+  c.innerHTML = `<h1>Change password</h1>
+    <p class="intro">Set a new password for <b>${esc(me.email)}</b>. Note: this login is shared with ScholarEdu, so the new password works there too.</p>
+    <section class="box"><div class="box-body">
+      <form class="form" id="pwform" style="max-width:420px;margin-top:0">
+        <div class="field"><label for="np1">New password</label><input id="np1" type="password" autocomplete="new-password" minlength="8" required></div>
+        <div class="field"><label for="np2">Type it again</label><input id="np2" type="password" autocomplete="new-password" minlength="8" required></div>
+        <p class="err" id="pwerr" role="alert" hidden></p>
+        <button class="b dark" type="submit" id="pwbtn" style="min-height:48px;align-self:flex-start">Save new password</button>
+        <p class="help">At least 8 characters. A longer password with numbers or symbols is safer.</p>
+      </form>
+    </div></section>`;
+  $('#pwform').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const a = $('#np1').value, b = $('#np2').value, er = $('#pwerr');
+    er.hidden = true;
+    if (a.length < 8) { er.textContent = 'Use at least 8 characters.'; er.hidden = false; return; }
+    if (a !== b) { er.textContent = "The two passwords don't match."; er.hidden = false; return; }
+    const btn = $('#pwbtn'); busy(btn, true);
+    const { error } = await sb.auth.updateUser({ password: a });
+    busy(btn, false);
+    if (error) { er.textContent = error.message; er.hidden = false; return; }
+    $('#np1').value = ''; $('#np2').value = '';
+    toast('Password changed');
+  });
 }
