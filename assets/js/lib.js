@@ -174,29 +174,89 @@ export function toast(msg) {
 }
 
 // ---------- images ----------
-// Shrinks big phone photos before upload (faster on mobile data).
-export async function compressImage(file, maxDim = 2000, quality = 0.85) {
-  if (!file || !file.type.startsWith('image/') || file.type === 'image/gif') return file;
+// Every photo is resized and converted to WebP in the visitor's browser
+// before it is uploaded: smaller files, faster on mobile data, and the
+// re-encode strips hidden metadata such as GPS location.
+//   • longest side at most 2000px (enough for the full-width slideshow)
+//   • WebP quality 0.80, stepping down (0.72, 0.64) if a file is still
+//     larger than ~550KB
+//   • Chrome, Edge, Firefox and Android encode WebP natively; Safari
+//     (iPhone/Mac) uses a small WebP encoder loaded only when needed.
+const IMG = { maxDim: 2000, quality: 0.8, minQuality: 0.6, targetBytes: 550 * 1024, maxInputBytes: 40 * 1024 * 1024 };
+
+function friendly(message) { const e = new Error(message); e.friendly = true; return e; }
+
+let nativeWebp;
+async function canEncodeWebpNatively() {
+  if (nativeWebp !== undefined) return nativeWebp;
   try {
-    const bmp = await createImageBitmap(file);
-    const scale = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
-    if (scale === 1 && file.size < 1.5 * 1024 * 1024) return file;
-    const c = document.createElement('canvas');
-    c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
-    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-    const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', quality));
-    return blob ? new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file;
-  } catch { return file; }
+    const c = document.createElement('canvas'); c.width = c.height = 2;
+    const b = await new Promise((r) => c.toBlob(r, 'image/webp', 0.8));
+    nativeWebp = !!b && b.type === 'image/webp';
+  } catch { nativeWebp = false; }
+  return nativeWebp;
 }
-function extOf(file) {
-  const m = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'image/heic': 'heic', 'image/heif': 'heif' };
-  return m[file.type] || (file.name.split('.').pop() || 'jpg').toLowerCase();
+
+async function decodeImage(file) {
+  try {
+    return await createImageBitmap(file, { imageOrientation: 'from-image' });
+  } catch {
+    // older browsers: fall back to an <img> element
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      return img;
+    } catch {
+      throw friendly('This photo could not be read. Please choose a JPG, PNG or WebP photo (on iPhone, a screenshot of the photo also works).');
+    } finally {
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+  }
 }
+
+async function encodeWebp(canvas, quality) {
+  if (await canEncodeWebpNatively()) {
+    const b = await new Promise((r) => canvas.toBlob(r, 'image/webp', quality));
+    if (b && b.type === 'image/webp') return b;
+  }
+  const { default: encode } = await import('../vendor/webp/webp-encode.js');
+  const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+  const buf = await encode(data, { quality: Math.round(quality * 100), method: 4 });
+  return new Blob([buf], { type: 'image/webp' });
+}
+
+export async function compressImage(file, opts = {}) {
+  const o = { ...IMG, ...opts };
+  if (!file) throw friendly('Please choose a photo.');
+  if (file.size > o.maxInputBytes) throw friendly('That photo is too large (over 40MB). Please choose a smaller one.');
+  const src = await decodeImage(file);
+  const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
+  if (!w || !h) throw friendly('This photo could not be read. Please try another one.');
+  const scale = Math.min(1, o.maxDim / Math.max(w, h));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w * scale));
+  c.height = Math.max(1, Math.round(h * scale));
+  const ctx = c.getContext('2d', { alpha: true });
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(src, 0, 0, c.width, c.height);
+  if (src.close) src.close();
+  let q = o.quality, blob = await encodeWebp(c, q);
+  while (blob.size > o.targetBytes && q - 0.08 >= o.minQuality) {
+    q = Math.round((q - 0.08) * 100) / 100;
+    blob = await encodeWebp(c, q);
+  }
+  const base = (file.name || 'photo').replace(/\.[^.]+$/, '').replace(/[^\w-]+/g, '-').slice(0, 60) || 'photo';
+  return new File([blob], `${base}.webp`, { type: 'image/webp' });
+}
+
 export async function uploadImage(file, folder = 'submissions') {
-  if (file.size > 10 * 1024 * 1024) throw new Error('That photo is larger than 10MB. Please choose a smaller one.');
   const f = await compressImage(file);
-  const path = `${folder}/${crypto.randomUUID()}.${extOf(f)}`;
-  const { error } = await sb.storage.from(BUCKET).upload(path, f, { contentType: f.type || 'image/jpeg', upsert: false, cacheControl: '31536000' });
+  if (f.size > 10 * 1024 * 1024) throw friendly('That photo is still too large after compressing. Please choose a smaller one.');
+  const path = `${folder}/${crypto.randomUUID()}.webp`;
+  const { error } = await sb.storage.from(BUCKET).upload(path, f, { contentType: 'image/webp', upsert: false, cacheControl: '31536000' });
   if (error) throw error;
   return path;
 }

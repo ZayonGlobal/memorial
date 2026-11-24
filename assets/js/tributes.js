@@ -119,7 +119,7 @@ function renderForm() {
       <div class="field"><label for="t-loc">Location <span class="opt">(optional)</span></label><input id="t-loc" name="location" maxlength="120" placeholder="City, country"></div>
       <div class="field"><label for="t-msg">Your tribute *</label><textarea id="t-msg" name="message" rows="7" required maxlength="6000" placeholder="Share a memory, a lesson he taught you, or what he meant to you."></textarea></div>
       <div class="field"><span class="lbl">Photo with him <span class="opt">(optional)</span></span>
-        <label class="drop" for="t-photo" style="min-height:84px;flex-direction:row" id="tdrop">${icon.upload()}<span>Upload a photo (max 10MB)</span></label>
+        <label class="drop" for="t-photo" style="min-height:84px;flex-direction:row" id="tdrop">${icon.upload()}<span>Upload a photo</span></label>
         <input id="t-photo" name="photo" type="file" accept="image/*" class="sr-only">
         <div class="previews" id="tprev"></div>
       </div>
@@ -152,7 +152,7 @@ function renderForm() {
       $('#write').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (ex) {
       console.error(ex);
-      err.textContent = ex?.message?.includes('10MB') ? ex.message : 'Sorry, something went wrong sending your tribute. Please check your connection and try again.';
+      err.textContent = ex?.friendly ? ex.message : 'Sorry, something went wrong sending your tribute. Please check your connection and try again.';
       err.hidden = false; btn.disabled = false; btn.textContent = 'Submit Tribute';
     }
   });

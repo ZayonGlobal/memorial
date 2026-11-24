@@ -36,7 +36,7 @@ main.innerHTML = `
       <h2 class="h2">Share a Photo</h2>
       <p class="lead" style="margin-top:18px">Old or recent, formal or candid: every picture helps us see more of him. Tell us a little about it so the family can place it in the right season of his life.</p>
       <ul style="margin:26px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;color:var(--text-2);font-size:15px">
-        <li>— JPG or PNG, up to 10MB each</li>
+        <li>— Any phone photo: it is resized and compressed automatically</li>
         <li>— You can add up to 10 photos at once</li>
         <li>— The family reviews every photo before it is shown</li>
       </ul>
@@ -153,7 +153,7 @@ function renderForm() {
       $('#again').onclick = renderForm;
     } catch (ex) {
       console.error(ex);
-      err.textContent = (ex?.message?.includes('10MB') ? ex.message : 'Sorry, something went wrong while uploading. Please check your connection and try again.') + (sent ? ` (${sent} of ${files.length} were sent.)` : '');
+      err.textContent = (ex?.friendly ? ex.message : 'Sorry, something went wrong while uploading. Please check your connection and try again.') + (sent ? ` (${sent} of ${files.length} were sent.)` : '');
       err.hidden = false; btn.disabled = false; btn.textContent = 'Send to the Family';
       files = files.slice(sent); showPrev();
     }
