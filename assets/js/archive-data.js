@@ -35,40 +35,49 @@ export const ALBUMS = [
     "h": 1200,
     "tw": 640,
     "th": 480
-   },
+   }
+  ]
+ },
+ {
+  "key": "wedding",
+  "cat": "early",
+  "kicker": "Marriage & family",
+  "title": "Wedding Day",
+  "desc": "His wedding to Lydia Adenike (Nike) Ojo in September 1987, with family and friends around them.",
+  "photos": [
    {
-    "f": "younger-IMG_20261124_083024_122",
-    "w": 1200,
+    "f": "wedding-IMG_20261124_083024_122",
+    "w": 1239,
     "h": 1600,
-    "tw": 480,
+    "tw": 496,
     "th": 640
    },
    {
-    "f": "younger-IMG_20261124_083034_510",
+    "f": "wedding-IMG_20261124_083034_510",
     "w": 1600,
-    "h": 1200,
+    "h": 1194,
     "tw": 640,
-    "th": 480
+    "th": 477
    },
    {
-    "f": "younger-IMG_20261124_083049_513",
+    "f": "wedding-IMG_20261124_083049_513",
     "w": 1600,
-    "h": 1200,
+    "h": 1187,
     "tw": 640,
-    "th": 480
+    "th": 475
    },
    {
-    "f": "younger-IMG_20261124_083114_727",
+    "f": "wedding-IMG_20261124_083114_727",
     "w": 1600,
-    "h": 1200,
+    "h": 1187,
     "tw": 640,
-    "th": 480
+    "th": 475
    },
    {
-    "f": "younger-IMG_20261124_083127_920",
-    "w": 1200,
+    "f": "wedding-IMG_20261124_083127_920",
+    "w": 1131,
     "h": 1600,
-    "tw": 480,
+    "tw": 452,
     "th": 640
    }
   ]

@@ -12,13 +12,14 @@ let filter = 'all';
 let page = 0;
 let items = [];
 
-const COVERS = { wawa: 'wawa-IMG_20261124_153731_463', salika: 'salika-IMG_20261124_112157_682', shao: 'shao-IMG_20261124_154024_212', younger: 'younger-IMG_20261124_080144_901' };
+const COVERS = { wedding: 'wedding-IMG_20261124_083049_513', wawa: 'wawa-IMG_20261124_153731_463', salika: 'salika-IMG_20261124_112157_682', shao: 'shao-IMG_20261124_154024_212', younger: 'younger-IMG_20261124_080144_901' };
 const IMG = 'assets/img/archive/';
 const full = (ph) => `${IMG}${ph.f}.webp`;
 const thumb = (ph) => `${IMG}thumbs/${ph.f}.webp`;
 const cover = (a) => a.photos.find((p) => p.f === COVERS[a.key]) || a.photos[0];
 const early = ALBUMS.filter((a) => a.cat === 'early');
 const ministry = ALBUMS.filter((a) => a.cat === 'ministry');
+const kicker = (a) => a.kicker || (a.cat === 'ministry' ? 'Mission outreach' : a.cat === 'family' ? 'Family' : 'Early life');
 const plural = (n) => `${n} photograph${n === 1 ? '' : 's'}`;
 
 function albumCard(a) {
@@ -26,7 +27,7 @@ function albumCard(a) {
   return `<a class="album-card reveal" href="#album-${esc(a.key)}" data-album="${esc(a.key)}" aria-label="Open the ${esc(a.title)} album, ${plural(a.photos.length)}">
     <span class="album-cover"><img src="${esc(a.remote ? c.src : thumb(c))}" ${c.tw ? `width="${c.tw}" height="${c.th}"` : ''} alt="" loading="lazy" decoding="async"></span>
     <span class="album-body">
-      <span class="album-kicker">${a.cat === 'ministry' ? 'Mission outreach' : a.cat === 'family' ? 'Family' : 'Early life'}</span>
+      <span class="album-kicker">${esc(kicker(a))}</span>
       <span class="album-title">${esc(a.title)}</span>
       <span class="album-meta"><span>${plural(a.photos.length)}</span><span class="album-open" aria-hidden="true">Open album →</span></span>
     </span>
@@ -145,7 +146,7 @@ const thumbSrc = (a, p) => (a.remote ? p.src : thumb(p));
 function openAlbum(key, push = true) {
   const a = albumsByKey[key]; if (!a) return;
   openKey = key; sheetLastFocus = document.activeElement;
-  $('#albumKicker').textContent = `${a.cat === 'ministry' ? 'Mission outreach' : a.cat === 'family' ? 'Family' : 'Early life'} · ${plural(a.photos.length)}`;
+  $('#albumKicker').textContent = `${kicker(a)} · ${plural(a.photos.length)}`;
   $('#albumTitle').textContent = a.title;
   $('#albumDesc').textContent = a.desc;
   $('#albumPhotos').innerHTML = a.photos.map((p, i) => `<button type="button" class="album-photo" data-i="${i}" aria-label="View photograph ${i + 1} of ${a.photos.length}${p.cap ? ': ' + esc(p.cap) : ''}">
