@@ -81,10 +81,11 @@ export const ALBUMS = [
   "photos": [
    {
     "f": "wawa-IMG_20261124_105810_798",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "A cross-section of Wawa church"
    },
    {
     "f": "wawa-IMG_20261124_105900_775",
@@ -102,10 +103,11 @@ export const ALBUMS = [
    },
    {
     "f": "wawa-IMG_20261124_110026_705",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "A cross-section of Wawa church"
    },
    {
     "f": "wawa-IMG_20261124_110040_007",
@@ -139,10 +141,11 @@ export const ALBUMS = [
    },
    {
     "f": "jika-IMG_20261124_110736_374",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "A cross-section of C&S Movement Church, Jika"
    }
   ]
  },
@@ -226,24 +229,27 @@ export const ALBUMS = [
    },
    {
     "f": "balugu-IMG_20261124_111452_945",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "Pastor Odusina with the leadership of Balugu and his family"
    },
    {
     "f": "balugu-IMG_20261124_111505_058",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "The leader in charge, Cherubim & Seraphim church, Balugu"
    },
    {
     "f": "balugu-IMG_20261124_111522_243",
-    "w": 1200,
-    "h": 1600,
-    "tw": 480,
-    "th": 640
+    "w": 1600,
+    "h": 1200,
+    "tw": 640,
+    "th": 480,
+    "cap": "Balugu church: a cross-section of the congregation"
    }
   ]
  },
