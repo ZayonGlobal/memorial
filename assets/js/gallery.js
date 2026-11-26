@@ -127,7 +127,8 @@ renderAlbums();
 const { data: seasonPhotos } = await sb.from('memorial_season_photos').select('season_id,image_url,caption,sort').order('sort');
 if (seasonPhotos?.length) {
   for (const se of seasons) {
-    const ps = seasonPhotos.filter((p) => p.season_id === se.id);
+    // archive photos linked into a season already have their own album here, so leave them out
+    const ps = seasonPhotos.filter((p) => p.season_id === se.id && !p.image_url.startsWith('assets/'));
     if (!ps.length) continue;
     const isMinistry = /ministry|mission/i.test(se.title);
     const a = { key: 'season-' + se.sort, cat: isMinistry ? 'ministry' : 'family', title: se.title, remote: true,

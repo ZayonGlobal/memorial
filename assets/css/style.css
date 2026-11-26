@@ -737,12 +737,12 @@ a{color:var(--gold-dark)}a:hover{color:#163e2b}
 @media(max-width:860px){.hx{padding-top:80px}.hx .hx-grid{align-items:flex-end;padding-top:clamp(140px,30vh,300px);padding-bottom:40px}.hx .hx-frame::after{background:linear-gradient(0deg,rgba(10,25,19,.96) 0%,rgba(10,25,19,.86) 40%,rgba(10,25,19,.32) 75%,rgba(10,25,19,.1) 100%)}.hx .hx-frame .hx-bg img{object-position:center top}.hx .hx-copy{max-width:100%}}
 
 /* Floral garland above slideshow controls */
-.hx .hx-band::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:clamp(52px,5.2vw,92px);background-image:url("../img/flower-garland.png.png");background-repeat:repeat-x;background-position:center bottom;background-size:auto 100%;pointer-events:none;z-index:1}
+.hx .hx-band::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:clamp(52px,5.2vw,92px);background-image:url("../img/flower-garland.webp");background-repeat:repeat-x;background-position:center bottom;background-size:auto 100%;pointer-events:none;z-index:1}
 .hx .hx-grid{padding-bottom:clamp(100px,9vw,150px)}
 .hx .hx-side .w{color:#c5ebd9!important}.hx .hx-side .k{color:#f0f8f3!important}
 @media(max-width:860px){.hx .hx-grid{padding-bottom:85px}.hx .hx-band::before{height:55px}}
 
-.hx .hx-band::before{background-image:url("../img/flower-garland.png.png");background-repeat:no-repeat;background-size:100% auto;background-position:center 65%;height:clamp(80px,13vw,220px)}
+.hx .hx-band::before{background-image:url("../img/flower-garland.webp");background-repeat:no-repeat;background-size:100% auto;background-position:center 65%;height:clamp(80px,13vw,220px)}
 .hx .hx-grid{padding-bottom:clamp(120px,15vw,250px)}
 @media(max-width:640px){.hx .hx-band::before{background-size:auto 150%;height:75px;background-position:center 65%}.hx .hx-grid{padding-bottom:100px}}
 

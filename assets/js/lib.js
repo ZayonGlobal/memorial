@@ -21,6 +21,7 @@ export function safeUrl(u) {
 export function publicUrl(path) {
   if (!path) return '';
   if (/^https?:\/\//i.test(path)) return path;
+  if (path.startsWith('assets/')) return '/' + path; // restored archive photos shipped with the site
   return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path.split('/').map(encodeURIComponent).join('/')}`;
 }
 export function fmtDate(iso) {
