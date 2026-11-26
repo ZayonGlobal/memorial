@@ -146,7 +146,7 @@ main.innerHTML = `
       ${kids.map((k, i) => `
       <a class="child-chip lift reveal" href="children.html?child=${i + 1}">
         <span class="n">${k.photo_url ? `<img class="cover" src="${esc(publicUrl(k.photo_url))}" alt="" loading="lazy">` : i + 1}</span>
-        <span style="min-width:0"><span class="nm">${esc(k.name)}</span><span class="rl">${esc(k.relation)}${k.duration ? ' · ' + esc(k.duration) : ''}</span></span>
+        <span style="min-width:0"><span class="nm">${esc(k.name)}</span><span class="rl">${esc([k.relation, k.duration].filter(Boolean).join(' · '))}</span></span>
       </a>`).join('')}
     </div>
   </div>

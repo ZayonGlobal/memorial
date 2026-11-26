@@ -66,7 +66,7 @@ main.innerHTML = `
         <span class="ph-k">${k.photo_url ? `<img src="${esc(publicUrl(k.photo_url))}" alt="">` : i + 1}</span>
         <span style="min-width:0;display:block">
           <span class="nm">${esc(k.name)}</span>
-          <span class="rl">${esc(k.relation)}${k.duration ? ' · ' + esc(k.duration) : ''}</span>
+          <span class="rl">${esc([k.relation, k.duration].filter(Boolean).join(' · '))}</span>
           <span class="playing">${icon.flameOutline(12, 'flame')}Now playing</span>
         </span>
       </button>`).join('')}
@@ -105,7 +105,7 @@ function idle() {
   player.innerHTML = `<div class="idle">
     <button type="button" class="play-ring" id="bigplay" aria-label="Play video of ${esc(k.name)}" ${has ? '' : 'disabled'} style="width:104px;height:104px">${icon.play(34)}</button>
     <div><p style="margin:0;font-family:var(--serif);font-size:clamp(30px,3.4vw,44px);line-height:1.1">${esc(k.name)}</p>
-    <p style="margin:6px 0 0;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold)">${esc(k.relation)}</p>
+    ${k.relation ? `<p style="margin:6px 0 0;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold)">${esc(k.relation)}</p>` : ''}
     ${has ? '' : '<p class="label" style="margin-top:18px;color:var(--on-dark-3);font-weight:500">Video coming soon</p>'}</div>
   </div>`;
   $('#bigplay')?.addEventListener('click', () => play(true));
@@ -145,7 +145,7 @@ function select(i) {
   const k = kids[sel];
   $('#now').innerHTML = `<span class="label" style="color:var(--on-dark-2);font-weight:500">Now showing · ${sel + 1} of ${kids.length}</span>`;
   $('#transcript').innerHTML = `<p class="label" style="margin:0;color:var(--gold-dark)">Transcript</p>
-    <h2 class="h3" style="font-size:36px">${esc(k.name)}, ${esc((k.relation || '').toLowerCase())}</h2>
+    <h2 class="h3" style="font-size:36px">${esc(k.name)}${k.relation ? ', ' + esc(k.relation.toLowerCase()) : ''}</h2>
     <p style="margin:18px 0 0;font-family:var(--serif);font-size:21px;line-height:1.55;color:var(--text-2);white-space:pre-line">${k.transcript ? esc(k.transcript) : 'A written transcript of this video will appear here.'}</p>`;
 }
 
