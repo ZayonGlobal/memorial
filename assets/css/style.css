@@ -822,3 +822,92 @@ img,video,iframe{max-width:100%}
 @media(max-width:600px){.archive-heading{align-items:start;flex-direction:column;gap:14px}.archive-filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}.archive-filters .pill{white-space:nowrap;flex-shrink:0}.archive-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.archive-image{height:220px}.archive-photo-caption{padding:12px;display:block}.archive-photo-caption span{display:block}.archive-photo-caption span:last-child{margin-top:4px}.archive-teaser{padding:48px 0}.archive-teaser-pictures{gap:8px}.archive-teaser-pictures img{height:230px}.archive-teaser-pictures img:nth-child(2){height:200px;margin-top:24px}.archive-story-actions .btn{width:100%}}
 @media(max-width:380px){.archive-grid{grid-template-columns:1fr}.archive-image{height:300px}}
 @media(prefers-reduced-motion:reduce){.archive-photo{transition:none}.archive-photo:hover{transform:none}}
+
+/* ---------- Photo gallery: albums by place (gallery.html) ---------- */
+.gallery-hero .wrap{padding-block:clamp(56px,9vw,104px) clamp(40px,6vw,72px)}
+.gallery-hero .lead{max-width:640px;margin-top:18px}
+.gallery-jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.gallery-jump a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--hairline);border-radius:999px;background:#fff;color:var(--text);font-family:var(--grotesk);font-size:13px;font-weight:500;letter-spacing:.04em;text-decoration:none;transition:background-color .2s,color .2s,border-color .2s}
+.gallery-jump a:hover{background:var(--black);border-color:var(--black);color:#fff}
+.gallery-cat{padding-block:clamp(56px,8vw,104px);scroll-margin-top:64px}
+.gallery-cat+.gallery-cat{border-top:1px solid var(--hairline)}
+.gallery-cat.ministry{background:linear-gradient(180deg,#eef7f1 0%,#fdfbf6 70%)}
+.anchor-alias{display:block;position:relative;top:-90px;height:0}
+.cat-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-bottom:clamp(24px,4vw,40px)}
+.cat-note{margin:0;max-width:380px;color:var(--muted);font-size:15px;line-height:1.6}
+.ministry-intro{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(20px,5vw,72px);align-items:start;margin-bottom:clamp(36px,5vw,60px)}
+.ministry-intro .h2::after{content:"";display:block;width:56px;height:2px;margin-top:22px;background:var(--gold-mid);border-radius:2px}
+.ministry-copy p{margin:0 0 14px;font-size:17px;line-height:1.75;color:var(--text-2)}
+.ministry-copy p:first-child{font-family:var(--serif);font-size:clamp(20px,2.2vw,24px);line-height:1.5;color:var(--text)}
+.ministry-copy p:last-child{margin-bottom:0;color:var(--muted)}
+.album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:clamp(18px,2.4vw,30px);isolation:isolate}
+.album-card{position:relative;display:flex;flex-direction:column;min-width:0;border:1px solid var(--hairline);border-radius:18px;background:#fff;color:var(--text);text-decoration:none;box-shadow:0 8px 30px #254b340d;transition:transform .3s ease,box-shadow .3s ease}
+.album-card::before,.album-card::after{content:"";position:absolute;inset:0;z-index:-1;border:1px solid var(--hairline);border-radius:18px;background:#fff}
+.album-card::before{transform:translate(5px,-5px) rotate(1.4deg);background:#f5faf6}
+.album-card::after{transform:translate(-4px,-3px) rotate(-1.2deg);background:#edf6f0}
+.album-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px #254b341a;color:var(--text)}
+.album-card:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+.album-cover{display:block;aspect-ratio:4/3;overflow:hidden;border-radius:17px 17px 0 0;background:#edf6f0}
+.album-cover img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.album-card:hover .album-cover img{transform:scale(1.04)}
+.album-body{display:flex;flex-direction:column;gap:6px;padding:18px 20px 20px;min-width:0}
+.album-kicker{display:block;font-family:var(--grotesk);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.album-title{font-family:var(--serif);font-size:clamp(22px,2.4vw,26px);font-weight:600;line-height:1.2;overflow-wrap:anywhere}
+.album-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin-top:4px;font-size:14px;color:var(--muted)}
+.album-open{color:var(--gold-dark);font-weight:600}
+
+/* album viewer: full screen on phones, a large panel on wider screens */
+.album-sheet{position:fixed;inset:0;z-index:150;background:rgba(16,30,23,.6);opacity:0;transition:opacity .25s}
+.album-sheet[hidden]{display:none}
+.album-sheet.show{opacity:1}
+.album-sheet-inner{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;background:var(--cream);padding:0 clamp(16px,4vw,44px) 56px;transform:translateY(14px);transition:transform .3s ease}
+.album-sheet.show .album-sheet-inner{transform:none}
+.album-sheet-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:14px;margin:0 calc(-1 * clamp(16px,4vw,44px));padding:12px clamp(16px,4vw,44px);background:rgba(253,251,246,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--hairline)}
+.album-sheet-head .icon-btn{flex:0 0 44px;width:44px;height:44px}
+.album-sheet-title{min-width:0}
+.album-sheet-title .album-kicker{margin:0 0 2px}
+.album-sheet-title h2{margin:0;font-family:var(--serif);font-size:clamp(24px,4vw,36px);font-weight:600;line-height:1.15;overflow-wrap:anywhere}
+.album-desc{max-width:720px;margin:20px 0 24px;color:var(--text-2);font-size:16px;line-height:1.7}
+.album-photos{columns:2;column-gap:10px}
+.album-photo{position:relative;display:block;width:100%;margin:0 0 10px;padding:0;overflow:hidden;border:1px solid var(--hairline);border-radius:12px;background:#edf6f0;text-align:left;cursor:zoom-in;break-inside:avoid}
+.album-photo img{display:block;width:100%;height:auto;transition:opacity .2s}
+.album-photo:hover img{opacity:.88}
+.album-photo:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.album-photo-cap{display:block;padding:9px 11px 11px;background:#fff;font-size:13px;line-height:1.45;color:var(--text-2)}
+.lightbox .icon-btn{background:rgba(0,0,0,.45)}
+@media(min-width:700px){.album-photos{columns:3;column-gap:16px}.album-photo{margin-bottom:16px}}
+@media(min-width:900px){
+ .album-sheet-inner{top:28px;bottom:28px;left:50%;right:auto;width:min(1180px,calc(100% - 56px));border-radius:24px;transform:translate(-50%,14px)}
+ .album-sheet.show .album-sheet-inner{transform:translate(-50%,0)}
+ .album-sheet-head{border-radius:24px 24px 0 0}
+}
+@media(min-width:1100px){.album-photos{columns:4}}
+@media(max-width:760px){
+ .ministry-intro{grid-template-columns:minmax(0,1fr)}
+ .ministry-copy p{font-size:16px}
+ .cat-head{align-items:flex-start;flex-direction:column}
+ .gallery-jump{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:2px clamp(16px,5vw,24px) 8px;scrollbar-width:none}
+ .gallery-jump::-webkit-scrollbar{display:none}
+ .gallery-jump a{flex:0 0 auto;white-space:nowrap}
+}
+/* phones: albums as compact rows so all eight fit without endless scrolling */
+@media(max-width:560px){
+ .album-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+ .album-card{flex-direction:row;align-items:stretch;border-radius:16px}
+ .album-card::before,.album-card::after{border-radius:16px}
+ .album-card::before{transform:translate(3px,-3px) rotate(.8deg)}
+ .album-card::after{transform:translate(-2px,-2px) rotate(-.6deg)}
+ .album-cover{flex:0 0 38%;max-width:150px;aspect-ratio:auto;min-height:112px;border-radius:15px 0 0 15px}
+ .album-body{justify-content:center;padding:14px 14px 14px 16px;gap:4px}
+ .album-title{font-size:21px}
+ .album-meta{flex-direction:column;font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){.album-card,.album-cover img,.album-sheet,.album-sheet-inner{transition:none}.album-card:hover{transform:none}.album-card:hover .album-cover img{transform:none}}
+/* biography page: ministry summary linking to the mission albums */
+.ministry-band{padding-block:clamp(56px,8vw,96px);border-top:1px solid var(--hairline);background:linear-gradient(180deg,#eef7f1,#fdfbf6)}
+.ministry-band .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,6vw,80px);align-items:center}
+.ministry-band .lead{margin:18px 0 26px;max-width:560px}
+.ministry-band-pics{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+.ministry-band-pics img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;border:1px solid var(--hairline)}
+.ministry-band-pics img:nth-child(2){margin-top:36px}
+@media(max-width:760px){.ministry-band .wrap{grid-template-columns:minmax(0,1fr)}.ministry-band .btn{width:100%}.ministry-band-pics img:nth-child(2){margin-top:20px}}

@@ -58,10 +58,25 @@ main.innerHTML = `
   </div>
 </div>
 
+<section class="ministry-band on-light" aria-labelledby="ministry-band-h">
+  <div class="wrap">
+    <div class="ministry-band-copy">
+      <p class="eyebrow">His ministry</p>
+      <h2 class="h2" id="ministry-band-h">A Life Dedicated to the Gospel</h2>
+      <p class="lead">He served as a full-time rural evangelist, church planter, ordained pastor and Special Apostle in the Cherubim and Seraphim Movement Church, and as Chairman of its Church Planting and Mission Board, reviving local churches and supporting rural congregations.</p>
+      <a class="btn btn-dark" href="gallery.html#missions">See the mission albums →</a>
+    </div>
+    <div class="ministry-band-pics" aria-hidden="true">
+      <img src="assets/img/archive/thumbs/wawa-IMG_20261124_153731_463.webp" alt="" loading="lazy" decoding="async">
+      <img src="assets/img/archive/thumbs/shao-IMG_20261124_154024_212.webp" alt="" loading="lazy" decoding="async">
+    </div>
+  </div>
+</section>
+
 <section class="next-band">
   <div class="wrap">
     <div><p class="eyebrow gd" style="font-size:20px">Continue</p><p class="big">See him in every season of his life</p></div>
-    <div class="archive-story-actions"><a class="btn btn-dark" href="seasons.html">Seasons of His Life →</a><a class="btn btn-outline" href="gallery.html#family-archive">Family Photo Archive →</a></div>
+    <div class="archive-story-actions"><a class="btn btn-dark" href="seasons.html">Seasons of His Life →</a><a class="btn btn-outline" href="gallery.html">Photo Gallery →</a></div>
   </div>
 </section>`;
 

@@ -118,13 +118,13 @@ main.innerHTML = `
   <div class="wrap archive-teaser-layout">
     <div class="archive-teaser-pictures">
       <img src="assets/img/archive/younger-IMG_20261124_080144_901.webp" alt="Restored photograph from his younger years" loading="lazy" decoding="async">
-      <img src="assets/img/archive/auna-IMG_20261124_111158_961.webp" alt="Restored photograph from the Auna mission collection" loading="lazy" decoding="async">
+      <img src="assets/img/archive/salika-IMG_20261124_112157_682.webp" alt="The children's church at Salika, one of the rural congregations he served" loading="lazy" decoding="async">
     </div>
     <div class="archive-teaser-copy">
       <p class="eyebrow">His journey in photographs</p>
       <h2 class="h2" id="archive-teaser-title">Moments Worth Remembering</h2>
-      <p class="lead">Explore photographs of his earlier years and the places his journeys took him, carefully preserved for generations to come.</p>
-      <a class="btn btn-dark" href="gallery.html#family-archive">Explore the photo archive →</a>
+      <p class="lead">A full-time rural evangelist and church planter, he carried the gospel to Wawa, Jika, Kainji, Shao Ile and many other communities. See those mission journeys and his early years in restored photo albums.</p>
+      <div class="archive-story-actions"><a class="btn btn-dark" href="gallery.html#missions">View the mission albums →</a><a class="btn btn-outline" href="gallery.html#early-life">Early life &amp; family</a></div>
     </div>
   </div>
 </section>

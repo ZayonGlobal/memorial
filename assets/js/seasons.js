@@ -89,7 +89,7 @@ main.innerHTML = `
       <p class="eyebrow">A family archive</p>
       <h2 class="h2" id="archive-seasons-title">His Story in Photographs</h2>
       <p class="lead">Explore 27 preserved photographs from his younger years and the Auna, Jika, Balugu, Kainji and Wawa collections. Each image retains its original setting.</p>
-      <a class="btn btn-dark" href="gallery.html#family-archive">View the restored photo archive →</a>
+      <a class="btn btn-dark" href="gallery.html">View the photo albums →</a>
     </div>
   </div>
 </section>

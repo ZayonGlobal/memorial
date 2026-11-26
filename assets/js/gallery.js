@@ -1,4 +1,5 @@
-import { sb, layout, esc, icon, bokeh, publicUrl, reveal, uploadImage, lightbox, $ } from './lib.js';
+import { sb, layout, esc, icon, publicUrl, reveal, uploadImage, lightbox, $ } from './lib.js';
+import { ALBUMS } from './archive-data.js';
 
 const main = document.getElementById('main');
 await layout('gallery');
@@ -11,36 +12,80 @@ let filter = 'all';
 let page = 0;
 let items = [];
 
+const COVERS = { wawa: 'wawa-IMG_20261124_153731_463', salika: 'salika-IMG_20261124_112157_682', shao: 'shao-IMG_20261124_154024_212', younger: 'younger-IMG_20261124_080144_901' };
+const IMG = 'assets/img/archive/';
+const full = (ph) => `${IMG}${ph.f}.webp`;
+const thumb = (ph) => `${IMG}thumbs/${ph.f}.webp`;
+const cover = (a) => a.photos.find((p) => p.f === COVERS[a.key]) || a.photos[0];
+const early = ALBUMS.filter((a) => a.cat === 'early');
+const ministry = ALBUMS.filter((a) => a.cat === 'ministry');
+const plural = (n) => `${n} photograph${n === 1 ? '' : 's'}`;
+
+function albumCard(a) {
+  const c = cover(a);
+  return `<a class="album-card reveal" href="#album-${esc(a.key)}" data-album="${esc(a.key)}" aria-label="Open the ${esc(a.title)} album, ${plural(a.photos.length)}">
+    <span class="album-cover"><img src="${esc(a.remote ? c.src : thumb(c))}" ${c.tw ? `width="${c.tw}" height="${c.th}"` : ''} alt="" loading="lazy" decoding="async"></span>
+    <span class="album-body">
+      <span class="album-kicker">${a.cat === 'ministry' ? 'Mission outreach' : a.cat === 'family' ? 'Family' : 'Early life'}</span>
+      <span class="album-title">${esc(a.title)}</span>
+      <span class="album-meta"><span>${plural(a.photos.length)}</span><span class="album-open" aria-hidden="true">Open album →</span></span>
+    </span>
+  </a>`;
+}
+
 main.innerHTML = `
-<section class="dark">
-  ${bokeh([['right:10%', 'top:12%', 220, 0], ['left:4%', 'bottom:4%', 130, -8]])}
-  <div class="wrap" style="padding-top:90px;padding-bottom:48px;display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between">
-    <div style="flex:1 1 460px;min-width:0">
-      <p class="eyebrow rise" style="font-size:23px">Photos from family and friends</p>
-      <h1 class="h1 rise d1">Shared Memories</h1>
-      <p class="lead rise d2" style="margin-top:18px;max-width:540px">Pictures of him that friends and relatives have kept over the years. Each one is approved by the family before it appears here.</p>
-    </div>
-    <a class="btn btn-gold rise d3" href="#upload">${icon.plus()}Share a Photo</a>
+<section class="page-hero gallery-hero">
+  <div class="wrap">
+    <p class="eyebrow rise">Photo gallery</p>
+    <h1 class="h1 rise d1">His Life in Pictures</h1>
+    <p class="lead rise d2">Restored photographs from his early years and the rural mission fields he served, kept in albums by place, alongside the pictures family and friends have shared.</p>
+    <nav class="gallery-jump rise d3" aria-label="Gallery sections">
+      <a href="#early-life">Early Life &amp; Family</a><a href="#missions">Ministry &amp; Missions</a><a href="#shared">Shared Memories</a><a href="#upload">Share a Photo</a>
+    </nav>
   </div>
-  <div class="wrap" style="padding-bottom:100px">
-    <div class="pills" role="group" aria-label="Filter photos by season" id="filters" style="padding-bottom:28px;border-bottom:1px solid rgba(217,115,43,.18)"></div>
-    <div class="masonry" id="grid" style="margin-top:28px"></div>
+</section>
+
+<section class="gallery-cat on-light" id="early-life" aria-labelledby="early-h">
+  <span id="family-archive" class="anchor-alias"></span>
+  <div class="wrap">
+    <header class="cat-head">
+      <div><p class="eyebrow">Albums</p><h2 class="h2" id="early-h">Early Life &amp; Family</h2></div>
+      <p class="cat-note">The years before the mission field, and the family he built.</p>
+    </header>
+    <div class="album-grid" id="early-albums"></div>
+  </div>
+</section>
+
+<section class="gallery-cat ministry on-light" id="missions" aria-labelledby="missions-h">
+  <div class="wrap">
+    <div class="ministry-intro">
+      <div>
+        <p class="eyebrow">Ministry &amp; missionary outreaches</p>
+        <h2 class="h2" id="missions-h">A Life Dedicated to the Gospel</h2>
+      </div>
+      <div class="ministry-copy">
+        <p>Pastor I. O. Odusina was a full-time rural evangelist, church planter, ordained pastor and Special Apostle in the Cherubim and Seraphim Movement Church.</p>
+        <p>As Chairman of the Church Planting and Mission Board he established churches and took the gospel to remote communities. He visited local churches to revive and strengthen them, supported rural congregations and delivered relief materials to mission outposts, in Wawa, Jika, Kainji, Shao Ile and many other communities.</p>
+        <p>These photographs record that commitment.</p>
+      </div>
+    </div>
+    <div class="album-grid" id="ministry-albums"></div>
+  </div>
+</section>
+
+<section class="gallery-cat shared on-light" id="shared" aria-labelledby="shared-h">
+  <div class="wrap">
+    <header class="cat-head">
+      <div><p class="eyebrow">From family and friends</p><h2 class="h2" id="shared-h">Shared Memories</h2></div>
+      <a class="btn btn-gold" href="#upload">${icon.plus()}Share a Photo</a>
+    </header>
+    <p class="lead" style="margin:0 0 26px;max-width:620px">Pictures of him that friends and relatives have kept over the years. The family approves each one before it appears here.</p>
+    <div class="pills" role="group" aria-label="Filter shared photos by season" id="filters" style="padding-bottom:24px"></div>
+    <div class="masonry" id="grid" style="margin-top:8px"></div>
     <div class="center" style="margin-top:28px"><button class="btn btn-ghost" type="button" id="more" hidden>Load more photos</button></div>
   </div>
 </section>
 
-
-<section class="archive-section on-light" id="family-archive" aria-labelledby="archive-title">
-  <div class="wrap section">
-    <div class="archive-heading">
-      <div><p class="eyebrow">Preserved moments</p><h2 class="h2" id="archive-title">The Family Photo Archive</h2>
-      <p class="lead">Browse separate albums from his younger years and rural missions, including church planting, evangelism and outreach. Each collection preserves its original photographs.</p></div>
-      <span class="archive-count" aria-label="27 archive photographs">27 photographs</span>
-    </div>
-    <div class="archive-filters" id="archive-filters" role="group" aria-label="Choose an archive collection"></div>
-    <div class="archive-grid" id="archive-grid"></div>
-  </div>
-</section>
 <section class="on-light" id="upload" style="scroll-margin-top:70px">
   <div class="wrap section" style="display:flex;flex-wrap:wrap;gap:48px 72px">
     <div style="flex:1 1 340px;min-width:0">
@@ -55,35 +100,103 @@ main.innerHTML = `
     </div>
     <div class="form-card" style="flex:999 1 560px;min-width:0" id="formCard"></div>
   </div>
-</section>`;
+</section>
 
+<div class="album-sheet" id="albumSheet" role="dialog" aria-modal="true" aria-labelledby="albumTitle" hidden>
+  <div class="album-sheet-inner">
+    <header class="album-sheet-head">
+      <button class="icon-btn" type="button" id="albumClose" aria-label="Close album">${icon.left()}</button>
+      <div class="album-sheet-title"><p class="album-kicker" id="albumKicker"></p><h2 id="albumTitle"></h2></div>
+    </header>
+    <p class="album-desc" id="albumDesc"></p>
+    <div class="album-photos" id="albumPhotos"></div>
+  </div>
+</div>`;
 
-const archivePhotos = [{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080124_858.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080144_901.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080348_457.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080420_781.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083024_122.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083034_510.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083049_513.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083114_727.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083127_920.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111158_961.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111211_206.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111234_803.webp"},{"group":"jika","label":"Jika","src":"assets/img/archive/jika-IMG_20261124_110720_755.webp"},{"group":"jika","label":"Jika","src":"assets/img/archive/jika-IMG_20261124_110736_374.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111403_728.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111429_037.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111452_945.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111505_058.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111522_243.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_110925_320.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_110956_656.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_111015_007.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_105810_798.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_105900_775.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110001_883.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110026_705.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110040_007.webp"}];
-let archiveGroup = 'all';
-const archiveGroups = [['all','All albums'],['younger','Younger years'],['missions','Rural missions'],['auna','Auna'],['jika','Jika'],['balugu','Balugu'],['kainji','Kainji'],['wawa','Wawa']];
-function renderArchive() {
-  const subset = archivePhotos.filter(p => archiveGroup === 'all' || (archiveGroup === 'missions' ? p.group !== 'younger' : p.group === archiveGroup));
-  document.getElementById('archive-filters').innerHTML = archiveGroups.map(([key,label]) =>
-    `<button type="button" class="pill" data-archive="${key}" aria-pressed="${key === archiveGroup}">${label}</button>`).join('');
-  const grid=document.getElementById('archive-grid');
-  grid.style.display='block';
-  const groups=[...new Set(subset.map(p=>p.group))];
-  grid.innerHTML=groups.map(key=>{
-    const photos=subset.filter(p=>p.group===key);
-    return `<section style="margin:32px 0 48px" aria-label="${esc(photos[0].label)} album"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px"><h3 class="h3" style="margin:0;font-size:clamp(24px,4vw,34px)">${esc(photos[0].label)}</h3><span class="label">${photos.length} photographs</span></div><div class="archive-grid">${photos.map(p=>`<button type="button" class="archive-photo" data-archive-i="${subset.indexOf(p)}" aria-label="View ${esc(p.label)} photograph"><span class="archive-image" style="background:#f2f3ef"><img src="${esc(p.src)}" style="object-fit:contain;image-orientation:from-image" loading="lazy" decoding="async" alt="${esc(p.label)} — archival photograph"></span><span class="archive-photo-caption"><span>${esc(p.label)}</span><span aria-hidden="true">View photo ↗</span></span></button>`).join('')}</div></section>`;
-  }).join('');
-  grid.onclick=e=>{
-    const tile=e.target.closest('[data-archive-i]');if(!tile)return;
-    const selected=subset[Number(tile.dataset.archiveI)];
-    const album=subset.filter(p=>p.group===selected.group);
-    lightbox(album.map(p=>({src:p.src,caption:p.label,meta:'Family archive photograph'})),album.indexOf(selected));
-  };
+// ---------- archive albums ----------
+const albumsByKey = Object.fromEntries(ALBUMS.map((a) => [a.key, a]));
+function renderAlbums() {
+  $('#early-albums').innerHTML = early.map(albumCard).join('');
+  $('#ministry-albums').innerHTML = ministry.map(albumCard).join('');
 }
-document.getElementById('archive-filters').addEventListener('click',e=>{
- const button=e.target.closest('[data-archive]');if(!button)return;
- archiveGroup=button.dataset.archive;renderArchive();
+renderAlbums();
+
+// Family-verified photos the admin added to the "Seasons of His Life" chapters become extra
+// Early Life & Family albums (one per chapter that has photos; the ministry chapter joins the missions).
+const { data: seasonPhotos } = await sb.from('memorial_season_photos').select('season_id,image_url,caption,sort').order('sort');
+if (seasonPhotos?.length) {
+  for (const se of seasons) {
+    const ps = seasonPhotos.filter((p) => p.season_id === se.id);
+    if (!ps.length) continue;
+    const isMinistry = /ministry|mission/i.test(se.title);
+    const a = { key: 'season-' + se.sort, cat: isMinistry ? 'ministry' : 'family', title: se.title, remote: true,
+      desc: 'Photographs the family added to this chapter of his life.',
+      photos: ps.map((p) => ({ src: publicUrl(p.image_url), cap: p.caption || '' })) };
+    albumsByKey[a.key] = a; (isMinistry ? ministry : early).push(a);
+  }
+  renderAlbums();
+}
+
+const sheet = $('#albumSheet');
+let openKey = null, sheetLastFocus = null;
+const photoSrc = (a, p) => (a.remote ? p.src : full(p));
+const thumbSrc = (a, p) => (a.remote ? p.src : thumb(p));
+
+function openAlbum(key, push = true) {
+  const a = albumsByKey[key]; if (!a) return;
+  openKey = key; sheetLastFocus = document.activeElement;
+  $('#albumKicker').textContent = `${a.cat === 'ministry' ? 'Mission outreach' : a.cat === 'family' ? 'Family' : 'Early life'} · ${plural(a.photos.length)}`;
+  $('#albumTitle').textContent = a.title;
+  $('#albumDesc').textContent = a.desc;
+  $('#albumPhotos').innerHTML = a.photos.map((p, i) => `<button type="button" class="album-photo" data-i="${i}" aria-label="View photograph ${i + 1} of ${a.photos.length}${p.cap ? ': ' + esc(p.cap) : ''}">
+      <img src="${esc(thumbSrc(a, p))}" ${p.tw ? `width="${p.tw}" height="${p.th}"` : ''} alt="${esc(p.cap || a.title + ' photograph ' + (i + 1))}" loading="lazy" decoding="async">
+      ${p.cap ? `<span class="album-photo-cap">${esc(p.cap)}</span>` : ''}
+    </button>`).join('');
+  sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('show'));
+  document.body.style.overflow = 'hidden';
+  sheet.querySelector('.album-sheet-inner').scrollTop = 0;
+  $('#albumClose').focus();
+  if (push) history.pushState({ album: key }, '', '#album-' + key);
+}
+function closeAlbum(fromPop = false) {
+  if (!openKey) return;
+  const key = openKey; openKey = null;
+  sheet.classList.remove('show');
+  setTimeout(() => { if (!openKey) sheet.hidden = true; }, 250);
+  document.body.style.overflow = '';
+  (sheetLastFocus && document.contains(sheetLastFocus) ? sheetLastFocus : document.querySelector(`[data-album="${key}"]`))?.focus?.();
+  if (!fromPop) {
+    if (history.state?.album) history.back();
+    else history.replaceState(null, '', location.pathname + location.search + (albumsByKey[key]?.cat === 'ministry' ? '#missions' : '#early-life'));
+  }
+}
+main.addEventListener('click', (e) => {
+  const card = e.target.closest('[data-album]');
+  if (card) { e.preventDefault(); openAlbum(card.dataset.album); }
 });
-renderArchive();
+$('#albumClose').addEventListener('click', () => closeAlbum());
+$('#albumPhotos').addEventListener('click', (e) => {
+  const b = e.target.closest('.album-photo'); if (!b) return;
+  const a = albumsByKey[openKey];
+  lightbox(a.photos.map((p, i) => ({ src: photoSrc(a, p), caption: p.cap || '', alt: p.cap || `${a.title} photograph ${i + 1}`,
+    meta: `${a.title} · ${i + 1} of ${a.photos.length}` })), Number(b.dataset.i));
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || !openKey || document.querySelector('.lightbox.open')) return;
+  closeAlbum();
+});
+// keep keyboard focus inside the open album
+sheet.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const f = [...sheet.querySelectorAll('button')].filter((x) => x.offsetParent);
+  if (!f.length) return;
+  if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+});
+window.addEventListener('popstate', () => {
+  const m = location.hash.match(/^#album-(.+)$/);
+  if (m && albumsByKey[m[1]]) openAlbum(m[1], false); else closeAlbum(true);
+});
 
 function renderFilters() {
   const opts = [['all', 'All photos'], ...seasons.map((x) => [x.id, x.title])];
@@ -205,4 +318,6 @@ renderForm();
 await load();
 main.removeAttribute('aria-busy');
 reveal();
-if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+const deep = location.hash.match(/^#album-(.+)$/);
+if (deep && albumsByKey[deep[1]]) { history.replaceState(null, '', location.pathname + '#' + (albumsByKey[deep[1]].cat === 'ministry' ? 'missions' : 'early-life')); openAlbum(deep[1]); }
+else if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();

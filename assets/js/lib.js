@@ -277,6 +277,14 @@ export function lightbox(items, index = 0) {
     $('.x', lb).onclick = closeLb;
     $('.prev', lb).onclick = () => showLb(lbIndex - 1);
     $('.next', lb).onclick = () => showLb(lbIndex + 1);
+    // swipe left/right on touch screens
+    let sx = null, sy = 0;
+    lb.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } }, { passive: true });
+    lb.addEventListener('touchend', (e) => {
+      if (sx === null) return;
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3 && lbItems.length > 1) showLb(lbIndex + (dx < 0 ? 1 : -1));
+    }, { passive: true });
     document.addEventListener('keydown', (e) => {
       if (!lb.classList.contains('open')) return;
       if (e.key === 'Escape') closeLb();
@@ -295,6 +303,8 @@ function showLb(i) {
   const it = lbItems[lbIndex];
   const img = $('img', lb); img.src = it.src; img.alt = it.alt || it.caption || 'Photo';
   $('figcaption', lb).innerHTML = `${esc(it.caption || '')}${it.meta ? `<small>${esc(it.meta)}</small>` : ''}`;
+  // preload the neighbours so swiping feels instant
+  if (lbItems.length > 1) [lbIndex + 1, lbIndex - 1].forEach((j) => { const n = lbItems[(j + lbItems.length) % lbItems.length]; if (n?.src) new Image().src = n.src; });
   const multi = lbItems.length > 1;
   $('.prev', lb).style.display = multi ? '' : 'none';
   $('.next', lb).style.display = multi ? '' : 'none';
@@ -302,7 +312,7 @@ function showLb(i) {
 function closeLb() {
   lb.classList.remove('show');
   setTimeout(() => lb.classList.remove('open'), 300);
-  document.body.style.overflow = '';
+  if (!document.querySelector('.album-sheet.show')) document.body.style.overflow = '';
   lastFocus?.focus?.();
 }
 
