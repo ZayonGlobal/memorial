@@ -34,7 +34,7 @@ main.innerHTML = `
   <div class="wrap section">
     <div class="archive-heading">
       <div><p class="eyebrow">Preserved moments</p><h2 class="h2" id="archive-title">The Family Photo Archive</h2>
-      <p class="lead">Restored photographs from his younger years and places connected with his missionary journeys. These photographs retain their original scenes.</p></div>
+      <p class="lead">Browse separate albums from his younger years and rural missions, including church planting, evangelism and outreach. Each collection preserves its original photographs.</p></div>
       <span class="archive-count" aria-label="27 archive photographs">27 photographs</span>
     </div>
     <div class="archive-filters" id="archive-filters" role="group" aria-label="Choose an archive collection"></div>
@@ -60,26 +60,28 @@ main.innerHTML = `
 
 const archivePhotos = [{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080124_858.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080144_901.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080348_457.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_080420_781.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083024_122.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083034_510.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083049_513.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083114_727.webp"},{"group":"younger","label":"Younger years","src":"assets/img/archive/younger-IMG_20261124_083127_920.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111158_961.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111211_206.webp"},{"group":"auna","label":"Auna","src":"assets/img/archive/auna-IMG_20261124_111234_803.webp"},{"group":"jika","label":"Jika","src":"assets/img/archive/jika-IMG_20261124_110720_755.webp"},{"group":"jika","label":"Jika","src":"assets/img/archive/jika-IMG_20261124_110736_374.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111403_728.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111429_037.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111452_945.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111505_058.webp"},{"group":"balugu","label":"Balugu","src":"assets/img/archive/balugu-IMG_20261124_111522_243.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_110925_320.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_110956_656.webp"},{"group":"kainji","label":"Kainji","src":"assets/img/archive/kainji-IMG_20261124_111015_007.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_105810_798.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_105900_775.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110001_883.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110026_705.webp"},{"group":"wawa","label":"Wawa","src":"assets/img/archive/wawa-IMG_20261124_110040_007.webp"}];
 let archiveGroup = 'all';
-const archiveGroups = [['all','All photographs'],['younger','Younger years'],['missions','Missions'],['auna','Auna'],['jika','Jika'],['balugu','Balugu'],['kainji','Kainji'],['wawa','Wawa']];
+const archiveGroups = [['all','All albums'],['younger','Younger years'],['missions','Rural missions'],['auna','Auna'],['jika','Jika'],['balugu','Balugu'],['kainji','Kainji'],['wawa','Wawa']];
 function renderArchive() {
   const subset = archivePhotos.filter(p => archiveGroup === 'all' || (archiveGroup === 'missions' ? p.group !== 'younger' : p.group === archiveGroup));
   document.getElementById('archive-filters').innerHTML = archiveGroups.map(([key,label]) =>
     `<button type="button" class="pill" data-archive="${key}" aria-pressed="${key === archiveGroup}">${label}</button>`).join('');
-  document.getElementById('archive-grid').innerHTML = subset.map((p,i) =>
-    `<button type="button" class="archive-photo" data-archive-i="${i}" aria-label="View ${p.label} photograph ${i+1}">
-      <span class="archive-image"><img src="${p.src}" loading="lazy" decoding="async" alt="${p.label} — restored archival photograph"></span>
-      <span class="archive-photo-caption"><span>${p.label}</span><span aria-hidden="true">View photo ↗</span></span>
-    </button>`).join('');
-  document.getElementById('archive-grid').onclick = e => {
-    const tile = e.target.closest('[data-archive-i]');
-    if (!tile) return;
-    lightbox(subset.map(p => ({src:p.src,caption:p.label,meta:'Restored family archive photograph'})), Number(tile.dataset.archiveI));
+  const grid=document.getElementById('archive-grid');
+  grid.style.display='block';
+  const groups=[...new Set(subset.map(p=>p.group))];
+  grid.innerHTML=groups.map(key=>{
+    const photos=subset.filter(p=>p.group===key);
+    return `<section style="margin:32px 0 48px" aria-label="${esc(photos[0].label)} album"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px"><h3 class="h3" style="margin:0;font-size:clamp(24px,4vw,34px)">${esc(photos[0].label)}</h3><span class="label">${photos.length} photographs</span></div><div class="archive-grid">${photos.map(p=>`<button type="button" class="archive-photo" data-archive-i="${subset.indexOf(p)}" aria-label="View ${esc(p.label)} photograph"><span class="archive-image" style="background:#f2f3ef"><img src="${esc(p.src)}" style="object-fit:contain;image-orientation:from-image" loading="lazy" decoding="async" alt="${esc(p.label)} — archival photograph"></span><span class="archive-photo-caption"><span>${esc(p.label)}</span><span aria-hidden="true">View photo ↗</span></span></button>`).join('')}</div></section>`;
+  }).join('');
+  grid.onclick=e=>{
+    const tile=e.target.closest('[data-archive-i]');if(!tile)return;
+    const selected=subset[Number(tile.dataset.archiveI)];
+    const album=subset.filter(p=>p.group===selected.group);
+    lightbox(album.map(p=>({src:p.src,caption:p.label,meta:'Family archive photograph'})),album.indexOf(selected));
   };
 }
-document.getElementById('archive-filters').addEventListener('click', e => {
-  const button=e.target.closest('[data-archive]');
-  if (!button) return;
-  archiveGroup=button.dataset.archive; renderArchive();
+document.getElementById('archive-filters').addEventListener('click',e=>{
+ const button=e.target.closest('[data-archive]');if(!button)return;
+ archiveGroup=button.dataset.archive;renderArchive();
 });
 renderArchive();
 
