@@ -141,6 +141,26 @@ export async function layout(active) {
     });
   }
 
+  // Phones: a fixed bottom tab bar with the main pages, one tap away.
+  if (!$('.m-tabbar') && $('#site-footer, .site-footer')) {
+    const ic = {
+      home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>',
+      story: '<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H19v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H19v-3"/><path d="M8 7h7M8 10.5h5"/>',
+      seasons: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+      children: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
+      gallery: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>',
+      tributes: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'
+    };
+    const tabs = [['index.html', 'Home', 'home'], ['story.html', 'Story', 'story'], ['seasons.html', 'Seasons', 'seasons'],
+      ['children.html', 'Children', 'children'], ['gallery.html', 'Gallery', 'gallery'], ['tributes.html', 'Tributes', 'tributes']];
+    document.body.insertAdjacentHTML('beforeend', `<nav class="m-tabbar" aria-label="Pages">${tabs.map(([h, l, k]) =>
+      `<a href="${h}" ${k === active ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic[k]}</svg><span>${l}</span></a>`).join('')}</nav>`);
+    document.body.classList.add('has-tabbar');
+    // hide the bar while someone is typing, so it never sits on top of the keyboard
+    addEventListener('focusin', (e) => { if (e.target.matches('input,textarea,select')) document.body.classList.add('typing'); });
+    addEventListener('focusout', () => document.body.classList.remove('typing'));
+  }
+
   const foot = $('#site-footer');
   if (foot) {
     foot.outerHTML = `<footer class="site-footer"><div class="wrap">

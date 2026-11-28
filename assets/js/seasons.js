@@ -1,4 +1,5 @@
 import { sb, layout, esc, placeholder, bokeh, publicUrl, reveal, lightbox, $ } from './lib.js';
+import { ARCHIVE_TOTAL } from './archive-data.js';
 
 const main = document.getElementById('main');
 await layout('seasons');
@@ -88,7 +89,7 @@ main.innerHTML = `
     <div class="archive-teaser-copy">
       <p class="eyebrow">A family archive</p>
       <h2 class="h2" id="archive-seasons-title">His Story in Photographs</h2>
-      <p class="lead">Explore 27 preserved photographs from his younger years and the Auna, Jika, Balugu, Kainji and Wawa collections. Each image retains its original setting.</p>
+      <p class="lead">Explore ${ARCHIVE_TOTAL} restored photographs in albums: his younger years, his wedding day, and the mission fields of Wawa, Jika, Kainji, Auna, Balugu, Salika and Shao Ile Tepatan.</p>
       <a class="btn btn-dark" href="gallery.html">View the photo albums →</a>
     </div>
   </div>

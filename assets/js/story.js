@@ -17,7 +17,7 @@ const glance = [
 ].filter(([, v]) => v);
 
 const secHtml = (x) => `
-  <article class="story-sec reveal">
+  <article class="story-sec reveal" id="sec-${x.sort}">
     ${x.eyebrow ? `<p class="k">${esc(x.eyebrow)}</p>` : ''}
     <h2 class="h3" style="font-size:42px">${esc(x.title)}</h2>
     <p class="body">${esc(x.body)}</p>
@@ -44,6 +44,7 @@ main.innerHTML = `
 </section>
 
 <div class="on-light">
+  ${sections.length > 1 ? `<nav class="m-chapters" aria-label="Chapters of his story">${sections.map((x) => `<a href="#sec-${x.sort}">${esc(x.title)}</a>`).join('')}</nav>` : ''}
   <div class="wrap story-layout">
     <div class="story-main">
       ${sections.slice(0, quoteAfter).map(secHtml).join('')}
@@ -53,7 +54,7 @@ main.innerHTML = `
     </div>
     <aside class="story-aside">
       ${glance.length ? `<div class="card-white reveal"><h2>At a Glance</h2><dl class="glance">${glance.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>` : ''}
-      ${timeline.length ? `<div class="card-white reveal" style="border-top:0"><h2>Timeline</h2><ol class="timeline">${timeline.map((t) => `<li><span class="y">${esc(t.year)}</span><span class="l">${esc(t.label)}</span></li>`).join('')}</ol></div>` : ''}
+      ${timeline.length ? `<div class="card-white reveal" style="border-top:0"><h2>Timeline</h2><ol class="timeline ${timeline.length > 6 ? 'm-fold' : ''}" id="timeline">${timeline.map((t) => `<li><span class="y">${esc(t.year)}</span><span class="l">${esc(t.label)}</span></li>`).join('')}</ol>${timeline.length > 6 ? `<button type="button" class="m-more" aria-controls="timeline" aria-expanded="false">Show all ${timeline.length} dates</button>` : ''}</div>` : ''}
     </aside>
   </div>
 </div>
@@ -82,6 +83,13 @@ main.innerHTML = `
 
 main.removeAttribute('aria-busy');
 main.addEventListener('click', (e) => {
+  const more = e.target.closest('.m-more');
+  if (more) {
+    const open = document.getElementById('timeline').classList.toggle('m-fold') === false;
+    more.setAttribute('aria-expanded', String(open));
+    more.textContent = open ? 'Show fewer dates' : `Show all ${timeline.length} dates`;
+    return;
+  }
   const b = e.target.closest('[data-lb]');
   if (b) lightbox([{ src: b.dataset.lb, caption: b.dataset.cap }]);
 });

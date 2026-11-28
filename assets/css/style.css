@@ -23,7 +23,7 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .wrap{max-width:var(--wrap);margin:0 auto;padding-left:32px;padding-right:32px}
 @media (max-width:640px){.wrap{padding-left:20px;padding-right:20px}}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0!important}
 .skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--ink);padding:10px 16px;z-index:100}
 .skip:focus{left:12px;top:12px}
 
@@ -911,3 +911,133 @@ img,video,iframe{max-width:100%}
 .ministry-band-pics img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;border:1px solid var(--hairline)}
 .ministry-band-pics img:nth-child(2){margin-top:36px}
 @media(max-width:760px){.ministry-band .wrap{grid-template-columns:minmax(0,1fr)}.ministry-band .btn{width:100%}.ministry-band-pics img:nth-child(2){margin-top:20px}}
+
+/* =====================================================================
+   Phone layout (≤760px): a layout made for phones rather than a squeezed
+   desktop page. Bottom tab bar, swipeable rows instead of long stacks,
+   key facts first, folded lists. Desktop is unaffected.
+   ===================================================================== */
+.m-tabbar,.m-chapters,.m-more{display:none}
+@media(max-width:760px){
+  /* bottom tab bar */
+  .m-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:4px 4px calc(4px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid var(--hairline);box-shadow:0 -6px 24px rgba(16,30,23,.06);transition:transform .25s ease}
+  .m-tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:12px;color:#5b6b62;font-family:var(--grotesk);font-size:11px;font-weight:500;letter-spacing:.01em;text-decoration:none}
+  .m-tabbar a[aria-current="page"]{color:var(--gold-dark);background:#eaf5ee}
+  .m-tabbar a:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  body.has-tabbar{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  body.typing .m-tabbar{transform:translateY(110%)}
+  .toast{bottom:calc(76px + env(safe-area-inset-bottom))}
+  .site-header .nav-links a[aria-current="page"]{font-weight:600}
+
+  /* swipe rows: shared behaviour */
+  .season-cards,.tribute-grid,.child-chips,.playlist,.pills,.gallery-jump,.m-chapters{scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .season-cards::-webkit-scrollbar,.tribute-grid::-webkit-scrollbar,.child-chips::-webkit-scrollbar,.playlist::-webkit-scrollbar,.pills::-webkit-scrollbar,.m-chapters::-webkit-scrollbar,.chapter .grid::-webkit-scrollbar{display:none}
+
+  /* compact footer: the tab bar already carries the page links */
+  .site-footer .wrap{padding-block:32px 24px}
+  .site-footer .ornament,.site-footer .eyebrow{display:none}
+  .site-footer .name{font-size:22px;line-height:1.25;margin-top:0}
+  .site-footer nav{display:none}
+  .site-footer .note{margin-top:18px;padding-top:16px}
+
+  /* ---------- Home ---------- */
+  .explore{gap:10px}
+  .explore-card{display:grid;grid-template-columns:minmax(0,1fr) 20px;grid-template-areas:"e a" "t a" "d a";align-items:center;column-gap:12px;padding:16px 18px;border-radius:16px}
+  .explore-card .eyebrow{grid-area:e;font-size:11px!important;line-height:1.4;letter-spacing:.12em}
+  .explore-card .t{grid-area:t;font-size:22px;margin-top:2px}
+  .explore-card .d{grid-area:d;margin-top:4px;font-size:14px;line-height:1.5}
+  .explore-card .go{display:none}
+  .explore-card::after{content:"";grid-area:a;width:9px;height:9px;border-top:2px solid var(--gold-dark);border-right:2px solid var(--gold-dark);transform:rotate(45deg);justify-self:center}
+  .values{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;margin-top:36px}
+  .value{padding-top:16px}
+  .value svg{width:22px;height:22px}
+  .value h3{margin-top:10px;font-size:11px;letter-spacing:.12em}
+  .value p{margin-top:6px;font-size:13.5px;line-height:1.5}
+  .season-cards{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:4px clamp(16px,5vw,24px) 8px;scroll-padding-inline:clamp(16px,5vw,24px)}
+  .season-card{flex:0 0 68%;width:auto;aspect-ratio:3/4;scroll-snap-align:start}
+  .season-card .cap{padding:70px 16px 16px}
+  .season-card .t{font-size:22px}
+  .video-teaser{margin-top:28px;aspect-ratio:16/10}
+  .child-chips{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:4px clamp(16px,5vw,24px) 8px}
+  .child-chip{flex:0 0 auto;width:auto;scroll-snap-align:start;padding:10px 16px 10px 10px;gap:10px;border-radius:999px}
+  .child-chip .n{flex-basis:40px;width:40px;height:40px;font-size:18px}
+  .child-chip .nm{font-size:17px;white-space:nowrap}
+  .tribute-grid{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:4px clamp(16px,5vw,24px) 10px}
+  .tribute-grid>.tribute{flex:0 0 86%;width:auto;scroll-snap-align:start;padding:22px 20px 18px}
+  .tribute-grid>.empty{flex:1}
+
+  .archive-teaser{padding:44px 0}
+  .archive-teaser-pictures{gap:10px;align-items:start}
+  .archive-teaser-pictures img{height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:14px}
+  .archive-teaser-pictures img:nth-child(2){margin-top:28px;height:auto}
+
+  /* ---------- His Story ---------- */
+  .m-chapters{display:flex;position:sticky;top:60px;z-index:20;gap:8px;overflow-x:auto;padding:10px clamp(16px,5vw,24px);background:rgba(253,251,246,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--hairline)}
+  .m-chapters a{flex:0 0 auto;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #D4D4D8;border-radius:999px;background:#fff;color:var(--text-2);font-family:var(--grotesk);font-size:13px;white-space:nowrap;text-decoration:none}
+  .m-chapters a:active{background:#eaf5ee}
+  .story-layout{display:flex;flex-direction:column;gap:28px;padding-top:28px;padding-bottom:56px}
+  .story-aside{display:contents}
+  .story-aside>.card-white:first-child{order:-1}
+  .story-main{order:0}
+  .story-aside>.card-white:nth-child(2){order:1}
+  .story-sec{scroll-margin-top:128px}
+  .story-sec .h3{font-size:clamp(26px,7.6vw,34px)!important;line-height:1.15}
+  .story-sec .body{font-size:16.5px;line-height:1.75}
+  .glance{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+  .timeline.m-fold li:nth-child(n+7){display:none}
+  .m-more{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:46px;margin-top:18px;border:1px solid #D4D4D8;border-radius:999px;background:#fff;color:var(--text);font-family:var(--grotesk);font-size:14px;font-weight:500}
+  .quote-block{padding:32px 22px}
+  .quote-block p:first-of-type{font-size:clamp(22px,6.4vw,28px)!important}
+
+  /* ---------- Seasons ---------- */
+  .page-hero .pills,.page-hero .pills.center{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:2px clamp(16px,5vw,24px) 6px;margin-top:24px!important}
+  .page-hero .pills .pill{flex:0 0 auto;white-space:nowrap}
+  .chapters{padding-top:40px}
+  .chapters .line{left:21px}
+  .chapter{padding:0 0 56px 48px;scroll-margin-top:76px}
+  .chapter .dot{width:42px;height:42px;font-size:15px}
+  .chapter .row{gap:18px}
+  .chapter .h3{font-size:clamp(28px,8vw,36px)!important;line-height:1.12}
+  .chapter .grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-right:calc(-1 * clamp(16px,5vw,24px));padding-right:clamp(16px,5vw,24px);scrollbar-width:none}
+  .chapter .grid>.tile{flex:0 0 78%;height:auto;aspect-ratio:4/3;scroll-snap-align:start}
+  .chapter .grid>.tile.big{flex-basis:86%}
+  .chapter .grid>div.tile:not(:first-child){display:none}
+  .chapter .grid>div.tile:first-child{flex-basis:100%;aspect-ratio:auto;height:96px;cursor:default}
+
+  /* ---------- The Children Speak ---------- */
+  .playlist{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:4px clamp(16px,5vw,24px) 8px}
+  .kid{flex:0 0 auto;width:auto;scroll-snap-align:start;padding:8px 16px 8px 8px;gap:10px;border-radius:999px}
+  .kid .ph-k{flex:0 0 40px;width:40px;height:40px;border-radius:50%;font-size:17px}
+  .kid .nm{font-size:16px;white-space:nowrap}
+  .kid .rl:empty{display:none}
+  .panel-dark .h3{font-size:30px!important}
+  .player-bar{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;grid-template-areas:"now now now" "prev all next";gap:10px;padding:14px 0 6px}
+  .player-bar .now{grid-area:now}
+  .player-bar #prev{grid-area:prev}
+  .player-bar #next{grid-area:next}
+  .player-bar #playall{grid-area:all;justify-self:stretch;min-height:44px}
+
+  /* ---------- Tributes ---------- */
+  .candle-box{flex:1 1 100%;display:grid;grid-template-columns:72px minmax(0,1fr);grid-template-areas:"c n" "c l" "b b";column-gap:14px;align-items:center;text-align:left;padding:16px 18px;border-radius:20px}
+  .candle-box .candle{grid-area:c;width:120px;height:150px;margin:-34px -24px;transform:scale(.56)}
+  .candle-box .count{grid-area:n;margin:0;font-size:34px;line-height:1}
+  .candle-box #candleLabel{grid-area:l;margin:2px 0 0!important}
+  .candle-box #candleAction{grid-area:b;margin-top:12px}
+  .candle-box #candleAction .btn{margin-top:0!important}
+  .two-col{padding-top:36px;padding-bottom:56px;gap:36px}
+  .two-col .main>.pills,.on-light .pills#filters{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(-1 * clamp(16px,5vw,24px));padding:2px clamp(16px,5vw,24px) 6px}
+  .pills#filters .pill{flex:0 0 auto;white-space:nowrap}
+  .two-col .main .tribute-grid{display:grid;overflow:visible;margin-inline:0;padding:0;scroll-snap-type:none}
+  .two-col .main .tribute-grid>.tribute{flex:none;width:100%}
+
+  /* ---------- Gallery ---------- */
+  .gallery-hero .lead{font-size:15.5px}
+  .gallery-cat{padding-block:44px}
+  #shared .masonry{columns:2;column-gap:10px}
+}
+@media(max-width:360px){
+  .m-tabbar a{font-size:10px}
+  .m-tabbar a svg{width:20px;height:20px}
+  .values{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.m-tabbar{transition:none}}
